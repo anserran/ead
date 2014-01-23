@@ -73,7 +73,7 @@ public class MockGame {
 	}
 
 	public void addActionToDummyActor(Action action) {
-		Actor actor = getDummyActor();
+		getDummyActor();
 		actor.addAction((com.badlogic.gdx.scenes.scene2d.Action) Engine.factory
 				.getEngineObject(action));
 	}
@@ -83,7 +83,7 @@ public class MockGame {
 	 * its rotation to 0, its width and height to 0 and its color to #FFFFFFFF
 	 */
 	public void resetDummyActor() {
-		Actor actor = getDummyActor();
+		getDummyActor();
 		actor.setPosition(0, 0);
 		actor.setScale(1, 1);
 		actor.setRotation(0);
