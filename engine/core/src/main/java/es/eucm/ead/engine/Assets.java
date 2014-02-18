@@ -53,6 +53,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import es.eucm.ead.engine.assets.GameLoader;
 import es.eucm.ead.engine.assets.GameLoader.GameParameter;
+import es.eucm.ead.engine.assets.HudLoader;
 import es.eucm.ead.engine.assets.SceneLoader;
 import es.eucm.ead.engine.assets.SceneLoader.SceneParameter;
 import es.eucm.ead.engine.assets.serializers.AtlasImageSerializer;
@@ -62,6 +63,7 @@ import es.eucm.ead.engine.assets.serializers.SceneElementSerializer;
 import es.eucm.ead.engine.assets.serializers.TextSerializer;
 import es.eucm.ead.schema.actors.Scene;
 import es.eucm.ead.schema.actors.SceneElement;
+import es.eucm.ead.schema.actors.hud.Hud;
 import es.eucm.ead.schema.game.Game;
 import es.eucm.ead.schema.renderers.AtlasImage;
 import es.eucm.ead.schema.renderers.Image;
@@ -84,6 +86,8 @@ public class Assets extends Json implements FileHandleResolver {
 	public static final String SCENES_PATH = "scenes/";
 
 	public static final String SUBGAMES_PATH = "subgames/";
+
+	public static final String HUDS_PATH = "huds/";
 
 	/**
 	 * Default time slot for loading assets.
@@ -531,6 +535,7 @@ public class Assets extends Json implements FileHandleResolver {
 		// Second, set loaders
 		setLoader(Game.class, new GameLoader(this));
 		setLoader(Scene.class, new SceneLoader(this));
+		setLoader(Hud.class, new HudLoader(this));
 	}
 
 	/**
@@ -586,6 +591,10 @@ public class Assets extends Json implements FileHandleResolver {
 
 	public String convertSubgameNameToPath(String name) {
 		return convertNameToPath(name, SUBGAMES_PATH, false, true);
+	}
+
+	public String convertHudNameToPath(String hudName) {
+		return convertNameToPath(hudName, HUDS_PATH, true, false);
 	}
 
 	protected String convertNameToPath(String name, String prefix,
