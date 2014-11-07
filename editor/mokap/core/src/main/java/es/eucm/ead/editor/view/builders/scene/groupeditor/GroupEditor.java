@@ -37,13 +37,20 @@
 package es.eucm.ead.editor.view.builders.scene.groupeditor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -72,21 +79,82 @@ public class GroupEditor extends AbstractWidget {
 
 	private SelectLayerMenu selectLayerMenu;
 
+	private Image touch1;
+	private Image touch2;
+
 	private boolean multipleSelection;
 
-	public GroupEditor() {
+	public GroupEditor(Skin skin) {
+		this(skin.get(GroupEditorStyle.class));
+	}
+
+	public GroupEditor(GroupEditorStyle style) {
 		selection = new Array<Actor>();
 		layersTouched = new Array<Actor>();
-		selectLayerMenu = new SelectLayerMenu(layersTouched, this);
+		selectLayerMenu = new SelectLayerMenu(style.layerButtonStyle,
+				layersTouched, this);
 		selectLayerMenu.setVisible(false);
+		selectLayerMenu.setBackground(style.layersBackground);
 
 		selectionLayer = new Group();
 		addActor(selectionLayer);
+		addActor(touch1 = new Image(style.touch));
+		addActor(touch2 = new Image(style.touch));
+		touch1.setVisible(false);
+		touch1.setTouchable(Touchable.disabled);
+		touch1.pack();
+		touch1.setOrigin(touch1.getWidth() / 2.0f, touch1.getHeight() / 2.0f);
+		touch2.setVisible(false);
+		touch2.setTouchable(Touchable.disabled);
+		touch2.pack();
+		touch2.setOrigin(touch2.getWidth() / 2.0f, touch2.getHeight() / 2.0f);
+
 		addActor(selectLayerMenu);
 
 		addListener(new GroupEditorListener());
 		// Drags moving objects
+		addListener(new InputListener() {
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				if (pointer < 2) {
+					Image touch = pointer == 0 ? touch1 : touch2;
+					touch.clearActions();
+					touch.setScale(0, 0);
+					touch.setVisible(true);
+					touch.addAction(Actions.sequence(Actions.alpha(1.0f),
+							Actions.scaleTo(1.0f, 1.0f, 0.25f,
+									Interpolation.exp5Out)));
+					touch.setPosition(x - touch.getWidth() / 2.0f,
+							y - touch.getHeight() / 2.0f);
+				}
+				return pointer < 2;
+			}
+
+			@Override
+			public void touchDragged(InputEvent event, float x, float y,
+					int pointer) {
+				if (pointer < 2) {
+					Image touch = pointer == 0 ? touch1 : touch2;
+					touch.setPosition(x - touch.getWidth() / 2.0f,
+							y - touch.getHeight() / 2.0f);
+				}
+			}
+
+			@Override
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				if (pointer < 2) {
+					Image touch = pointer == 0 ? touch1 : touch2;
+					touch.addAction(Actions.sequence(
+							Actions.alpha(0, 0.5f, Interpolation.exp5Out),
+							Actions.hide()));
+				}
+			}
+		});
 		addListener(new DragListener() {
+
 			@Override
 			public void drag(InputEvent event, float x, float y, int pointer) {
 				if (pointer == 0) {
@@ -140,18 +208,19 @@ public class GroupEditor extends AbstractWidget {
 	public void setSelection(Iterable<Actor> selection) {
 		clearSelection();
 		for (Actor actor : selection) {
+			addToSelection(actor, true);
+		}
+	}
+
+	void addToSelection(Actor actor, boolean addBox) {
+		selection.add(actor);
+		if (addBox) {
 			GeometryUtils.adjustGroup(actor);
-			addToSelection(actor);
 			SelectionBox selectionBox = Pools.obtain(SelectionBox.class);
 			selectionBox.setTarget(actor, background);
 			selectionBox.selected();
 			selectionLayer.addActor(selectionBox);
-			Pools.free(selectionBox);
 		}
-	}
-
-	private void addToSelection(Actor actor) {
-		selection.add(actor);
 	}
 
 	/**
@@ -198,6 +267,12 @@ public class GroupEditor extends AbstractWidget {
 		@Override
 		public void touchDown(InputEvent event, float x, float y, int pointer,
 				int button) {
+
+			if (event.isStopped()) {
+				// If the event is stopped, long press must be cancelled
+				getGestureDetector().cancel();
+			}
+
 			if (!event.isHandled() && pointer == 0) {
 
 				if (selectionLayer.getChildren().size > 0) {
@@ -274,7 +349,8 @@ public class GroupEditor extends AbstractWidget {
 				Actor target = selectionLayer.hit(x, y, true);
 				if (target instanceof SelectionBox) {
 					if (((SelectionBox) target).isPressed()) {
-						addToSelection(((SelectionBox) target).getTarget());
+						addToSelection(((SelectionBox) target).getTarget(),
+								false);
 						fireSelection();
 					} else if (((SelectionBox) target).isMoving()) {
 						for (Actor actor : selectionLayer.getChildren()) {
@@ -309,45 +385,47 @@ public class GroupEditor extends AbstractWidget {
 		}
 	}
 
+	float[] points = new float[8];
+
 	private void showLayersSelector(float x, float y) {
 		layersTouched.clear();
-        Vector2 tmp = Pools.obtain(Vector2.class);
-		Rectangle rectangle = Pools.obtain(Rectangle.class);
+		Vector2 tmp = Pools.obtain(Vector2.class);
+		Polygon polygon = Pools.obtain(Polygon.class);
+
 		for (Actor actor : rootGroup.getChildren()) {
 
-			tmp.set(0, 0);
-			actor.localToAscendantCoordinates(this, tmp);
-			rectangle.setPosition(tmp.x, tmp.y);
-
-			tmp.set(actor.getWidth(), actor.getHeight());
-			actor.localToAscendantCoordinates(this, tmp);
-			rectangle.setSize(tmp.x, tmp.y);
-
-			if (rectangle.contains(x, y)) {
+			int j = 0;
+			for (int i = 0; i < 4; i++) {
+				tmp.set(i == 0 || i == 3 ? 0 : actor.getWidth(), i > 1 ? 0
+						: actor.getHeight());
+				actor.localToAscendantCoordinates(this, tmp);
+				points[j++] = tmp.x;
+				points[j++] = tmp.y;
+			}
+			polygon.setVertices(points);
+			if (polygon.contains(x, y)) {
 				layersTouched.add(actor);
 			} else {
-				for (int i = 0; i < 4; i++) {
-					tmp.set(i % 2 == 0 ? rectangle.x : rectangle.width,
-							i < 2 ? rectangle.y : rectangle.getHeight());
-					if (nearEnough(x, y, tmp)) {
+				for (int i = 0; i < 8; i += 2) {
+					if (nearEnough(x, y, points[i], points[i + 1])) {
 						layersTouched.add(actor);
 						break;
 					}
 				}
 			}
 		}
-		Pools.free(rectangle);
-        Pools.free(tmp);
+		Pools.free(polygon);
+		Pools.free(tmp);
 		if (layersTouched.size > 0) {
-            selectLayerMenu.setPosition(x, y);
+			selectLayerMenu.setPosition(x, y);
 			selectLayerMenu.setVisible(true);
 			selectLayerMenu.show();
 		}
 	}
 
-	private boolean nearEnough(float x, float y, Vector2 point) {
-		return Math.abs(x - point.x) < cmToXPixels(NEAR_CM)
-				|| Math.abs(y - point.y) < cmToYPixels(NEAR_CM);
+	private boolean nearEnough(float x1, float y1, float x2, float y2) {
+		return Math.abs(x1 - x2) < cmToXPixels(NEAR_CM)
+				&& Math.abs(y1 - y2) < cmToYPixels(NEAR_CM);
 	}
 
 	/**
@@ -364,12 +442,24 @@ public class GroupEditor extends AbstractWidget {
 	/**
 	 * Notifies current selection has been updated
 	 */
-	private void fireSelection() {
+	void fireSelection() {
 		GroupEvent groupEvent = Pools.obtain(GroupEvent.class);
 		groupEvent.setType(Type.selected);
 		groupEvent.setSelection(selection);
 		fire(groupEvent);
 		Pools.free(groupEvent);
+	}
+
+	public static class GroupEditorStyle {
+
+		/**
+		 * Background for layer selector
+		 */
+		public Drawable layersBackground;
+
+		public ButtonStyle layerButtonStyle;
+
+		public Drawable touch;
 	}
 
 	public static class GroupEvent extends Event {

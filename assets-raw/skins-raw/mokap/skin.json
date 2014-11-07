@@ -190,5 +190,14 @@
             "background": "toolbar",
             "color": "brown_moka"
         }
+    },
+    "es.eucm.ead.editor.view.builders.scene.groupeditor.GroupEditor$GroupEditorStyle": {
+        "default": {
+            "layersBackground": "page",
+            "layerButtonStyle": {
+                "down": "light_gray_bg"
+            },
+            "touch": "touch"
+        }
     }
 }

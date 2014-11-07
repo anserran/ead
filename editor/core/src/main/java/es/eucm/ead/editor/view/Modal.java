@@ -42,6 +42,9 @@ public interface Modal {
 
 	/**
 	 * Hides the modal and executes the given runnable once it is done
+	 * 
+	 * @param runnable
+	 *            might be {@code null}
 	 */
 	void hide(Runnable runnable);
 
