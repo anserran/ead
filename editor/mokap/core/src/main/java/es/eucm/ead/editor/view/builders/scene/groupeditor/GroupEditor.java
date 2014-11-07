@@ -37,6 +37,7 @@
 package es.eucm.ead.editor.view.builders.scene.groupeditor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -57,6 +58,8 @@ import es.eucm.ead.editor.view.widgets.AbstractWidget;
 
 public class GroupEditor extends AbstractWidget {
 
+	public static final float NEAR_CM = 1.0f;
+
 	private Drawable background;
 
 	private Group rootGroup;
@@ -65,13 +68,21 @@ public class GroupEditor extends AbstractWidget {
 
 	private Array<Actor> selection;
 
+	private Array<Actor> layersTouched;
+
+	private SelectLayerMenu selectLayerMenu;
+
 	private boolean multipleSelection;
 
 	public GroupEditor() {
 		selection = new Array<Actor>();
+		layersTouched = new Array<Actor>();
+		selectLayerMenu = new SelectLayerMenu(layersTouched, this);
+		selectLayerMenu.setVisible(false);
 
 		selectionLayer = new Group();
 		addActor(selectionLayer);
+		addActor(selectLayerMenu);
 
 		addListener(new GroupEditorListener());
 		// Drags moving objects
@@ -236,7 +247,12 @@ public class GroupEditor extends AbstractWidget {
 
 		@Override
 		public boolean longPress(Actor actor, float x, float y) {
-			return false;
+			if (!multipleSelection) {
+				clearSelection();
+				fireSelection();
+			}
+			showLayersSelector(x, y);
+			return true;
 		}
 
 		@Override
@@ -291,6 +307,47 @@ public class GroupEditor extends AbstractWidget {
 				selectionLayer.addActor(selectionBox);
 			}
 		}
+	}
+
+	private void showLayersSelector(float x, float y) {
+		layersTouched.clear();
+        Vector2 tmp = Pools.obtain(Vector2.class);
+		Rectangle rectangle = Pools.obtain(Rectangle.class);
+		for (Actor actor : rootGroup.getChildren()) {
+
+			tmp.set(0, 0);
+			actor.localToAscendantCoordinates(this, tmp);
+			rectangle.setPosition(tmp.x, tmp.y);
+
+			tmp.set(actor.getWidth(), actor.getHeight());
+			actor.localToAscendantCoordinates(this, tmp);
+			rectangle.setSize(tmp.x, tmp.y);
+
+			if (rectangle.contains(x, y)) {
+				layersTouched.add(actor);
+			} else {
+				for (int i = 0; i < 4; i++) {
+					tmp.set(i % 2 == 0 ? rectangle.x : rectangle.width,
+							i < 2 ? rectangle.y : rectangle.getHeight());
+					if (nearEnough(x, y, tmp)) {
+						layersTouched.add(actor);
+						break;
+					}
+				}
+			}
+		}
+		Pools.free(rectangle);
+        Pools.free(tmp);
+		if (layersTouched.size > 0) {
+            selectLayerMenu.setPosition(x, y);
+			selectLayerMenu.setVisible(true);
+			selectLayerMenu.show();
+		}
+	}
+
+	private boolean nearEnough(float x, float y, Vector2 point) {
+		return Math.abs(x - point.x) < cmToXPixels(NEAR_CM)
+				|| Math.abs(y - point.y) < cmToYPixels(NEAR_CM);
 	}
 
 	/**
