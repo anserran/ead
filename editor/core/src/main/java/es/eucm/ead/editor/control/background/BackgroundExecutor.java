@@ -91,7 +91,7 @@ public class BackgroundExecutor {
 			if (e.result.isDone()) {
 				try {
 					Object result = e.result.get();
-					e.listener.done(this, result);
+					e.listener.result(this, result);
 				} catch (GdxRuntimeException ex) {
 					e.listener.error(ex);
 				} finally {
@@ -131,7 +131,7 @@ public class BackgroundExecutor {
 	 * <strong>IMPORTANT:</strong> Keep in mind that
 	 * {@link BackgroundTaskListener} methods are all executed in the UI thread,
 	 * so if you need to do some additional heavy process in
-	 * {@link BackgroundExecutor.BackgroundTaskListener#done(BackgroundExecutor, Object)}
+	 * {@link BackgroundExecutor.BackgroundTaskListener#result(BackgroundExecutor, Object)}
 	 * , you should do it in a new {@link BackgroundTask}.
 	 * </p>
 	 * 
@@ -148,7 +148,7 @@ public class BackgroundExecutor {
 
 		/**
 		 * Notifies the execution of the task has successfully finished. This
-		 * method is executed in the UI thread
+		 * method is executed in the UI thread, an can be called multiple times
 		 * 
 		 * @param backgroundExecutor
 		 *            the background executor, in case the result process needs
@@ -156,7 +156,7 @@ public class BackgroundExecutor {
 		 * @param result
 		 *            the task result
 		 */
-		void done(BackgroundExecutor backgroundExecutor, T result);
+		void result(BackgroundExecutor backgroundExecutor, T result);
 
 		/**
 		 * Notifies the execution of the task failed.This method is executed in

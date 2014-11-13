@@ -88,8 +88,8 @@ public class BackgroundExecutorTest {
 			}
 
 			@Override
-			public void done(BackgroundExecutor backgroundExecutor,
-					Boolean result) {
+			public void result(BackgroundExecutor backgroundExecutor,
+                               Boolean result) {
 				assertTrue(result);
 				done = true;
 			}
@@ -125,8 +125,8 @@ public class BackgroundExecutorTest {
 			}
 
 			@Override
-			public void done(BackgroundExecutor backgroundExecutor,
-					Boolean result) {
+			public void result(BackgroundExecutor backgroundExecutor,
+                               Boolean result) {
 				fail("This shouldn't be called");
 			}
 

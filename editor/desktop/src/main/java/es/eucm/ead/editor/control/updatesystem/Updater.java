@@ -195,8 +195,8 @@ public class Updater {
 					}
 
 					@Override
-					public void done(BackgroundExecutor backgroundExecutor,
-							Object result) {
+					public void result(BackgroundExecutor backgroundExecutor,
+                                       Object result) {
 						Gdx.app.debug(LOG_TAG,
 								"Downloading update.json. Complete!" + result);
 					}

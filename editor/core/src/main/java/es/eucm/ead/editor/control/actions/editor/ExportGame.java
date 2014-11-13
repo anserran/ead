@@ -200,7 +200,7 @@ public class ExportGame extends EnabledOnLoadAction {
 		}
 
 		@Override
-		public void done(BackgroundExecutor backgroundExecutor, Object result) {
+		public void result(BackgroundExecutor backgroundExecutor, Object result) {
 			complete("");
 		}
 

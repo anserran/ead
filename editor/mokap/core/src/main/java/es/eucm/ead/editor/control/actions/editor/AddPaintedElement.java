@@ -87,7 +87,7 @@ public class AddPaintedElement extends EditorAction {
 		}
 
 		@Override
-		public void done(BackgroundExecutor backgroundExecutor, Boolean result) {
+		public void result(BackgroundExecutor backgroundExecutor, Boolean result) {
 			if (result) {
 				ModelEntity sceneElement = brushStrokes.createSceneElement();
 				controller.action(AddSceneElement.class, sceneElement);

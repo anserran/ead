@@ -82,8 +82,8 @@ public class BackgroundTaskDemo extends AbstractWidgetTest {
 						}
 
 						@Override
-						public void done(BackgroundExecutor backgroundExecutor,
-								String result) {
+						public void result(BackgroundExecutor backgroundExecutor,
+                                           String result) {
 							label.setText("Done.");
 						}
 

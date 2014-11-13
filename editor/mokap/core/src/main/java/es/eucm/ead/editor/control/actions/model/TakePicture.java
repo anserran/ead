@@ -118,7 +118,7 @@ public class TakePicture extends EditorAction {
 		}
 
 		@Override
-		public void done(BackgroundExecutor backgroundExecutor, Boolean result) {
+		public void result(BackgroundExecutor backgroundExecutor, Boolean result) {
 
 		}
 
