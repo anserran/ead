@@ -65,7 +65,7 @@ public class HomeView implements ViewBuilder, BackListener {
 
 	@Override
 	public Actor getView(Object... args) {
-        view.clear();
+        view.clearChildren();
 		controller.getBackgroundExecutor().submit(loadProjects,
 				new BackgroundTaskListener<Void>() {
 					@Override
