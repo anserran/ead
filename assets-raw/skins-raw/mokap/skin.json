@@ -70,6 +70,12 @@
             "g": 0.6627451,
             "b": 0.95686275,
             "a": 0.5
+        },
+        "deep_orange": {
+            "r": 1.0,
+            "g": 0.34117648,
+            "b": 0.13333334,
+            "a": 0.5
         }
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
@@ -112,6 +118,10 @@
         "page_semi_transparent": {
             "name": "page",
             "color": "semi_transparent"
+        },
+        "deep_orange_bg": {
+            "name": "blank_grey_border",
+            "color": "deep_orange"
         }
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
@@ -265,11 +275,11 @@
             "backgroundOff": "switch_bar",
             "on": "switch_circle",
             "off": "switch_circle",
-			"iconStyle": "switch",		
-			"circleColorOn": "white",		
-			"circleColorOff": "brown_moka",
-			"barColorOn": "light_brown_moka",		
-			"barColorOff": "dark_brown_moka"
+            "iconStyle": "switch",
+            "circleColorOn": "white",
+            "circleColorOff": "brown_moka",
+            "barColorOn": "light_brown_moka",
+            "barColorOff": "dark_brown_moka"
         }
     },
     "es.eucm.ead.editor.view.builders.scene.groupeditor.GroupEditor$GroupEditorStyle": {
@@ -289,6 +299,16 @@
                 "fontColor": "white"
             },
             "pressed": "light_blue_bg"
+        }
+    },
+    "es.eucm.ead.editor.view.widgets.layouts.Gallery$GalleryStyle": {
+        "default": {
+            "background": "blank",
+            "checked": "light_blue_bg"
+        },
+        "navigation": {
+            "background": "page_left",
+            "checked": "deep_orange_bg"
         }
     }
 }

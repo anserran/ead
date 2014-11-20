@@ -36,11 +36,14 @@
  */
 package es.eucm.ead.editor.view.widgets.layouts;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+
 import es.eucm.ead.editor.view.widgets.AbstractWidget;
 import es.eucm.ead.editor.view.widgets.WidgetBuilder;
 
@@ -51,15 +54,23 @@ public class Gallery extends ScrollPane {
 
 	private Grid container;
 
+	private GalleryStyle style;
+
+	public Gallery(float rowHeight, int columns, Skin skin) {
+		this(rowHeight, columns, skin.get(GalleryStyle.class));
+	}
+
 	/**
 	 * @param rowHeight
 	 *            row height (in pixels)
 	 * @param columns
 	 *            number of columns for the gallery
 	 */
-	public Gallery(float rowHeight, int columns) {
+	public Gallery(float rowHeight, int columns, GalleryStyle style) {
 		super(null);
+		this.style = style;
 		setWidget(container = new Grid(rowHeight, columns));
+		getStyle().background = style.background;
 		setScrollingDisabled(true, false);
 	}
 
@@ -71,12 +82,8 @@ public class Gallery extends ScrollPane {
 		container.pad(pad);
 	}
 
-	public void setBackground(Drawable background) {
-		getStyle().background = background;
-	}
-
 	public Cell add(Actor actor) {
-		Cell cell = new Cell(actor);
+		Cell cell = new Cell(actor, style.checked);
 		container.addActor(cell);
 		return cell;
 	}
@@ -174,13 +181,34 @@ public class Gallery extends ScrollPane {
 
 		private boolean usePrefHeight;
 
-		Cell(Actor actor) {
+		private boolean checked;
+
+		private Drawable checkedForeground;
+
+		Cell(Actor actor, Drawable checkedForeground) {
 			this.actor = actor;
+			this.checkedForeground = checkedForeground;
 			addActor(actor);
+		}
+
+		public boolean isChecked() {
+			return checked;
+		}
+
+		public void setChecked(boolean checked) {
+			this.checked = checked;
 		}
 
 		public void usePrefHeight() {
 			this.usePrefHeight = true;
+		}
+
+		@Override
+		protected void drawChildren(Batch batch, float parentAlpha) {
+			super.drawChildren(batch, parentAlpha);
+			if (checked && checkedForeground != null) {
+				checkedForeground.draw(batch, 0, 0, getWidth(), getHeight());
+			}
 		}
 
 		@Override
@@ -191,5 +219,19 @@ public class Gallery extends ScrollPane {
 					Actions.moveTo(0, 0, 0.2f, Interpolation.exp5Out),
 					Actions.alpha(1.0f, 0.5f, Interpolation.exp10Out)));
 		}
+	}
+
+	public static class GalleryStyle {
+
+		/**
+		 * Background for the gallery
+		 */
+		public Drawable background;
+
+		/**
+		 * Foreground when the cell is selected
+		 */
+		public Drawable checked;
+
 	}
 }
