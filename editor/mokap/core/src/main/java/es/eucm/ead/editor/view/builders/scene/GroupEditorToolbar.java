@@ -429,5 +429,4 @@ public class GroupEditorToolbar extends MultiWidget implements ModelView {
 		interaction.add(mode);
 		return interaction;
 	}
-
 }

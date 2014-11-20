@@ -109,7 +109,7 @@ public class SceneGroupEditor extends GroupEditor implements ModelView {
 			public void dragStart(InputEvent event, float x, float y,
 					int pointer) {
 				if (event.getTarget() instanceof SelectionBox) {
-					sceneEditor.hideToolbar();
+					sceneEditor.enterFullScreen();
 					draggingSelectBox = true;
 				} else {
 					draggingSelectBox = false;
@@ -120,7 +120,7 @@ public class SceneGroupEditor extends GroupEditor implements ModelView {
 			@Override
 			public void dragStop(InputEvent event, float x, float y, int pointer) {
 				if (draggingSelectBox) {
-					sceneEditor.showToolbar();
+					sceneEditor.exitFullscreen();
 				}
 			}
 		});

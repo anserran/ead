@@ -36,6 +36,8 @@
  */
 package es.eucm.ead.editor.view.builders.scene;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import es.eucm.ead.editor.control.Commands;
 import es.eucm.ead.editor.control.Commands.CommandListener;
 import es.eucm.ead.editor.control.Commands.CommandsStack;
@@ -50,7 +52,9 @@ import es.eucm.ead.editor.model.Model.SelectionListener;
 import es.eucm.ead.editor.model.Q;
 import es.eucm.ead.editor.model.events.SelectionEvent;
 import es.eucm.ead.editor.view.ModelView;
+import es.eucm.ead.editor.view.SkinConstants;
 import es.eucm.ead.editor.view.builders.scene.draw.BrushStrokes;
+import es.eucm.ead.editor.view.builders.scene.interaction.LinkEditor;
 import es.eucm.ead.editor.view.builders.scene.play.TestGameView;
 import es.eucm.ead.editor.view.widgets.AbstractWidget;
 import es.eucm.ead.editor.view.widgets.MultiWidget;
@@ -111,6 +115,11 @@ public class SceneEditor extends BaseView implements ModelView,
 		setToolbar(toolbar = new GroupEditorToolbar(controller, this,
 				brushStrokes));
 		setContent(container);
+
+		Actor link = new LinkEditor(controller).background(controller
+				.getApplicationAssets().getSkin()
+				.getDrawable(SkinConstants.DRAWABLE_PAGE_RIGHT));
+		setSelectionContext(link);
 	}
 
 	public SceneGroupEditor getGroupEditor() {
@@ -171,7 +180,7 @@ public class SceneEditor extends BaseView implements ModelView,
 	public void setMode(Mode mode) {
 		if (this.mode == Mode.PLAY && mode != Mode.PLAY) {
 			controller.getEngine().stop();
-			showToolbar();
+			exitFullscreen();
 			gameView.setVisible(false);
 			sceneGroupEditor.setVisible(true);
 			sceneGroupEditor.prepare();
@@ -200,7 +209,7 @@ public class SceneEditor extends BaseView implements ModelView,
 			toolbar.setSelectedWidget(FX);
 			break;
 		case PLAY:
-			hideToolbar();
+			enterFullScreen();
 			gameView.setVisible(true);
 			sceneGroupEditor.setVisible(false);
 			controller.getEngine().play();
@@ -255,6 +264,13 @@ public class SceneEditor extends BaseView implements ModelView,
 	@Override
 	public void contextPopped(Commands commands, CommandsStack poppedContext,
 			boolean merge) {
+	}
+
+    @Override
+	protected void layoutSelectionContext() {
+		setBounds(selectionContext, 0, 0, getWidth(), getHeight()
+				+ toolbar.getBackground().getBottomHeight()
+				- (toolbar == null ? 0 : getPrefHeight(toolbar)));
 	}
 
 }

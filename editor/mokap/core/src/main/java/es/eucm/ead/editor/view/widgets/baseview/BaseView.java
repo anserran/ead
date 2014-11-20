@@ -77,7 +77,7 @@ public class BaseView extends AbstractWidget {
 
 	private Navigation navigation;
 
-	private SelectionContext selectionContext;
+	protected SelectionContext selectionContext;
 
 	private Actor content;
 
@@ -205,7 +205,7 @@ public class BaseView extends AbstractWidget {
 		navigation.hideRightAway();
 	}
 
-	public void showToolbar() {
+	public void exitFullscreen() {
 		toolbar.clearActions();
 		toolbar.addAction(Actions.sequence(
 				Actions.touchable(Touchable.enabled), Actions.moveTo(0,
@@ -213,7 +213,7 @@ public class BaseView extends AbstractWidget {
 						Interpolation.exp5Out)));
 	}
 
-	public void hideToolbar() {
+	public void enterFullScreen() {
 		toolbar.clearActions();
 		toolbar.addAction(Actions.sequence(
 				Actions.touchable(Touchable.disabled),
@@ -265,12 +265,16 @@ public class BaseView extends AbstractWidget {
 	@Override
 	public void layout() {
 		setBounds(navigation, 0, 0, getWidth(), getHeight());
-		setBounds(selectionContext, 0, 0, getWidth(), getHeight()
-				- (toolbar == null ? 0 : getPrefHeight(toolbar)));
 		layoutToolbar();
+		layoutSelectionContext();
 		if (content != null) {
 			setBounds(content, 0, 0, getWidth(), getHeight());
 		}
+	}
+
+	protected void layoutSelectionContext() {
+		setBounds(selectionContext, 0, 0, getWidth(), getHeight()
+				- (toolbar == null ? 0 : getPrefHeight(toolbar)));
 	}
 
 	private void layoutToolbar() {

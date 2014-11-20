@@ -136,6 +136,14 @@
         "toast": {
             "font": "default_font",
             "fontColor": "white",
+        },
+        "toolbar": {
+            "font": "default_font",
+            "fontColor": "white"
+        },
+        "edition": {
+            "font": "default_font",
+            "fontColor": "gray"
         }
     },
     "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
@@ -201,6 +209,9 @@
             "enabledImageColor": "white",
             "up": "transparent_48_bg",
             "down": "pressed_48_bg"
+        },
+        "edition": {
+            "enabledImageColor": "gray"
         },
         "context": {
             "enabledImageColor": "gray",
