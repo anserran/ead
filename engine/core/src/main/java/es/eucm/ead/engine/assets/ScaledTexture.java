@@ -34,24 +34,34 @@
  *      You should have received a copy of the GNU Lesser General Public License
  *      along with eAdventure.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.eucm.ead.editor.commands;
+package es.eucm.ead.engine.assets;
 
-import es.eucm.ead.editor.assets.EditorGameAssets;
-import es.eucm.ead.engine.mock.MockFiles;
-import es.eucm.ead.engine.mock.MockImageUtils;
-import org.junit.Before;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 
-import es.eucm.ead.editor.model.Model;
-import es.eucm.ead.engine.mock.MockApplication;
+public class ScaledTexture extends BaseDrawable {
 
-public class CommandTest {
+	private Texture texture;
 
-	protected Model model;
+	private float scale;
 
-	@Before
-	public void setUp() {
-		MockApplication.initStatics();
-		model = new Model(new EditorGameAssets(new MockFiles(),
-				new MockImageUtils()));
+	public ScaledTexture(Texture texture, float scale) {
+		this.texture = texture;
+		this.scale = scale;
+	}
+
+	@Override
+	public void draw(Batch batch, float x, float y, float width, float height) {
+		batch.draw(texture, x, y, 0, 0, width, height, scale, scale, 0, 0, 0,
+				texture.getWidth(), texture.getHeight(), false, false);
+	}
+
+	public float getWidth() {
+		return texture.getWidth();
+	}
+
+	public float getHeight() {
+		return texture.getHeight();
 	}
 }

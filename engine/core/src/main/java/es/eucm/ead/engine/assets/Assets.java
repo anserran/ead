@@ -59,13 +59,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
-
 import es.eucm.ead.engine.I18N;
 import es.eucm.ead.engine.assets.loaders.ExtendedSkinLoader;
 
@@ -516,6 +516,14 @@ public abstract class Assets extends Json implements FileHandleResolver,
 		Gdx.app.error("Assets", "Error loading " + asset, throwable);
 	}
 
+	/**
+	 * Disposes all assets in the manager and stops all asynchronous loading.
+	 */
+	public synchronized void dispose() {
+		Gdx.app.debug(this.getClass().getCanonicalName(), "Disposing.");
+		assetManager.dispose();
+	}
+
 	public interface AssetLoadedCallback<T> {
 
 		void loaded(String fileName, T asset);
@@ -554,11 +562,30 @@ public abstract class Assets extends Json implements FileHandleResolver,
 
 	}
 
-	/**
-	 * Disposes all assets in the manager and stops all asynchronous loading.
-	 */
-	public synchronized void dispose() {
-		Gdx.app.debug(this.getClass().getCanonicalName(), "Disposing.");
-		assetManager.dispose();
+	public interface ImageUtils {
+
+		/**
+		 * Puts in size the size of the image in file handle
+		 * 
+		 * @return false if the file is not an image. In that case, size will be
+		 *         set to -1, -1
+		 */
+		boolean imageSize(FileHandle fileHandle, Vector2 size);
+
+		/**
+		 * @return if the given size can be opened with the current hardware
+		 */
+		boolean validSize(Vector2 size);
+
+		/**
+		 * Scales the image in src to make it loadable by the current hardware.
+		 * Result is stored in target.
+		 * 
+		 * @return the scale applied to src to be loadable ty the current
+		 *         hardware
+		 */
+		float scale(FileHandle src, FileHandle target);
+
 	}
+
 }

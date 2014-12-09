@@ -34,24 +34,30 @@
  *      You should have received a copy of the GNU Lesser General Public License
  *      along with eAdventure.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.eucm.ead.editor.commands;
+package es.eucm.ead.engine.utils;
 
-import es.eucm.ead.editor.assets.EditorGameAssets;
-import es.eucm.ead.engine.mock.MockFiles;
-import es.eucm.ead.engine.mock.MockImageUtils;
-import org.junit.Before;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Vector2;
+import es.eucm.ead.engine.assets.Assets.ImageUtils;
 
-import es.eucm.ead.editor.model.Model;
-import es.eucm.ead.engine.mock.MockApplication;
+public class DesktopImageUtils implements ImageUtils {
 
-public class CommandTest {
+	@Override
+	public boolean imageSize(FileHandle fileHandle, Vector2 size) {
+		Pixmap pixmap = new Pixmap(fileHandle);
+		size.set(pixmap.getWidth(), pixmap.getHeight());
+		return true;
+	}
 
-	protected Model model;
+	@Override
+	public boolean validSize(Vector2 size) {
+		return true;
+	}
 
-	@Before
-	public void setUp() {
-		MockApplication.initStatics();
-		model = new Model(new EditorGameAssets(new MockFiles(),
-				new MockImageUtils()));
+	@Override
+	public float scale(FileHandle src, FileHandle target) {
+		src.copyTo(target);
+		return 1.0f;
 	}
 }

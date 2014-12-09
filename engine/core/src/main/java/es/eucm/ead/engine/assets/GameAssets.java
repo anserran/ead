@@ -44,6 +44,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import es.eucm.ead.engine.GameLoader;
+import es.eucm.ead.engine.assets.loaders.ScaledTextureLoader;
 import es.eucm.ead.schemax.GameStructure;
 
 /**
@@ -60,14 +61,17 @@ public class GameAssets extends Assets implements GameStructure {
 
 	private boolean gamePathInternal;
 
+	protected ImageUtils imageUtils;
+
 	/**
 	 * Creates an assets handler
 	 * 
 	 * @param files
 	 *            object granting access to files
 	 */
-	public GameAssets(Files files) {
+	public GameAssets(Files files, ImageUtils imageUtils) {
 		super(files);
+		this.imageUtils = imageUtils;
 		setLoaders();
 		loadBindings();
 	}
@@ -200,6 +204,8 @@ public class GameAssets extends Assets implements GameStructure {
 	 */
 	protected void setLoaders() {
 		setLoader(Object.class, new JsonLoader<Object>(this, Object.class));
+		setLoader(ScaledTexture.class,
+				new ScaledTextureLoader(this, imageUtils));
 	}
 
 	public String convertSceneNameToPath(String name) {
