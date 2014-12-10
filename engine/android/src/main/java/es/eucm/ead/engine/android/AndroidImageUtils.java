@@ -79,7 +79,10 @@ public class AndroidImageUtils implements ImageUtils {
 		if (maxSize == -1) {
 			IntBuffer intBuffer = BufferUtils.newIntBuffer(16);
 			Gdx.gl.glGetIntegerv(GL20.GL_MAX_TEXTURE_SIZE, intBuffer);
-			maxSize = intBuffer.get(0);
+			maxSize = Math
+					.min(intBuffer.get(0),
+							Math.max(Gdx.graphics.getHeight(),
+									Gdx.graphics.getWidth()));
 		}
 		return maxSize;
 	}
