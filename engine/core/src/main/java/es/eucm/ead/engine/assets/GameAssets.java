@@ -141,7 +141,7 @@ public class GameAssets extends Assets implements GameStructure {
 			// Relative file
 			FileHandle fh = gamePathInternal ? files.internal(loadingPath
 					+ path) : files.absolute(loadingPath + path);
-			if (checkFileExistence(fh)) {
+			if (checkFileExistence(fh) || !files.internal(path).exists()) {
 				return fh;
 			} else {
 				// Fallback: use internal file

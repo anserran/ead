@@ -40,18 +40,20 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
 import es.eucm.ead.engine.assets.Assets.ImageUtils;
+import es.eucm.ead.engine.assets.GameAssets;
 import es.eucm.ead.engine.assets.ScaledTexture;
+import es.eucm.ead.schemax.GameStructure;
 
 public class ScaledTextureLoader
 		extends
 		AsynchronousAssetLoader<ScaledTexture, AssetLoaderParameters<ScaledTexture>> {
+
+	private GameAssets gameAssets;
 
 	private ImageUtils imageUtils;
 
@@ -61,9 +63,9 @@ public class ScaledTextureLoader
 
 	private AssetDescriptor assetDescriptor;
 
-	public ScaledTextureLoader(FileHandleResolver resolver,
-			ImageUtils imageUtils) {
-		super(resolver);
+	public ScaledTextureLoader(GameAssets gameAssets, ImageUtils imageUtils) {
+		super(gameAssets);
+		this.gameAssets = gameAssets;
 		this.imageUtils = imageUtils;
 	}
 
@@ -88,8 +90,17 @@ public class ScaledTextureLoader
 			return Array.with(assetDescriptor = new AssetDescriptor(imageFile,
 					Texture.class));
 		} else {
-			FileHandle scaled = file.sibling(file.name() + ".scaled");
-			scale = imageUtils.scale(imageFile, scaled);
+			FileHandle scaleProperty = gameAssets
+					.resolve(GameStructure.METADATA_PATH + imageFile.name()
+							+ ".prop");
+			FileHandle scaled = gameAssets.resolve(GameStructure.METADATA_PATH
+					+ imageFile.name() + ".scaled");
+			if (!imageFile.exists() || !scaleProperty.exists()) {
+				scale = imageUtils.scale(imageFile, scaled);
+				scaleProperty.writeString(scale + "", false);
+			} else {
+				scale = Float.parseFloat(scaleProperty.readString());
+			}
 			return Array.with(assetDescriptor = new AssetDescriptor(scaled,
 					Texture.class));
 		}

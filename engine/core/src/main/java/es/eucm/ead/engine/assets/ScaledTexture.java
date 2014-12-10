@@ -38,6 +38,7 @@ package es.eucm.ead.engine.assets;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 
 public class ScaledTexture extends BaseDrawable {
@@ -46,6 +47,8 @@ public class ScaledTexture extends BaseDrawable {
 
 	private float scale;
 
+	private Matrix4 textureMatrix = new Matrix4();
+
 	public ScaledTexture(Texture texture, float scale) {
 		this.texture = texture;
 		this.scale = scale;
@@ -53,15 +56,19 @@ public class ScaledTexture extends BaseDrawable {
 
 	@Override
 	public void draw(Batch batch, float x, float y, float width, float height) {
-		batch.draw(texture, x, y, 0, 0, width, height, scale, scale, 0, 0, 0,
-				texture.getWidth(), texture.getHeight(), false, false);
+		Matrix4 oldMatrix = batch.getTransformMatrix();
+		textureMatrix.set(oldMatrix);
+		textureMatrix.scl(scale, scale, 1.0f);
+		batch.setTransformMatrix(textureMatrix);
+		batch.draw(texture, x, y);
+		batch.setTransformMatrix(oldMatrix);
 	}
 
 	public float getWidth() {
-		return texture.getWidth();
+		return texture.getWidth() * scale;
 	}
 
 	public float getHeight() {
-		return texture.getHeight();
+		return texture.getHeight() * scale;
 	}
 }

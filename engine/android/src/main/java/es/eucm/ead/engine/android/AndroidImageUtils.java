@@ -44,6 +44,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.StreamUtils;
 import es.eucm.ead.engine.assets.Assets.ImageUtils;
@@ -58,7 +59,12 @@ public class AndroidImageUtils implements ImageUtils {
 
 	private static final String TAG = "ImageUtils";
 
-	private int maxSize;
+	private int maxSize = -1;
+
+	public AndroidImageUtils() {
+		// We do this to make sure it is called in a opengl thread
+		maxSize();
+	}
 
 	@Override
 	public boolean imageSize(FileHandle fileHandle, Vector2 size) {
@@ -71,16 +77,16 @@ public class AndroidImageUtils implements ImageUtils {
 
 	private int maxSize() {
 		if (maxSize == -1) {
-			IntBuffer intBuffer = IntBuffer.allocate(1);
+			IntBuffer intBuffer = BufferUtils.newIntBuffer(16);
 			Gdx.gl.glGetIntegerv(GL20.GL_MAX_TEXTURE_SIZE, intBuffer);
-			maxSize = intBuffer.array()[0];
+			maxSize = intBuffer.get(0);
 		}
 		return maxSize;
 	}
 
 	@Override
 	public boolean validSize(Vector2 size) {
-		return size.x > maxSize() || size.y > maxSize();
+		return size.x < maxSize() && size.y < maxSize();
 	}
 
 	@Override

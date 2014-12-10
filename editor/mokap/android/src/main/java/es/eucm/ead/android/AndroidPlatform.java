@@ -58,6 +58,7 @@ import android.widget.EditText;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.google.android.gms.analytics.Tracker;
 import es.eucm.ead.android.EditorActivity.ActivityResultListener;
 import es.eucm.ead.editor.control.Controller;
@@ -112,7 +113,7 @@ public class AndroidPlatform extends MokapPlatform {
 
 	private final String[] names;
 
-	private ImageUtils imageUtils = new AndroidImageUtils();
+	private ImageUtils imageUtils;
 
 	public AndroidPlatform(Context context, Tracker tracker) {
 		this.tracker = tracker;
@@ -122,6 +123,12 @@ public class AndroidPlatform extends MokapPlatform {
 		names = new String[values.length];
 		for (int i = 0; i < values.length; ++i)
 			names[i] = values[i].name;
+	}
+
+	@Override
+	public void setBatch(Batch batch) {
+		super.setBatch(batch);
+		imageUtils = new AndroidImageUtils();
 	}
 
 	@Override

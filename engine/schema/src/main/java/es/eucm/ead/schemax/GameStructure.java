@@ -63,6 +63,8 @@ public interface GameStructure {
 
 	public static final String ANIMATION_PATH = "anim/";
 
+	public static final String METADATA_PATH = ".metadata/";
+
 	/**
 	 * Internal folder where the game is stored when it is exported as a Jar.
 	 * This constant should be the same than the one defined in EngineJarGame,
