@@ -37,7 +37,6 @@
 package es.eucm.ead.editor.view.builders.scene;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
 import es.eucm.ead.editor.control.Controller;
 import es.eucm.ead.editor.control.MokapController.BackListener;
 import es.eucm.ead.editor.control.actions.editor.ChangeView;

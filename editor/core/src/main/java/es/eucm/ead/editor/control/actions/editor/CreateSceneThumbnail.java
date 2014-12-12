@@ -93,11 +93,8 @@ public class CreateSceneThumbnail extends EditorAction {
 	private Model model;
 
 	public CreateSceneThumbnail() {
-		super(true, false, new Class[] { ModelEntity.class, Integer.class,
-				Integer.class }, new Class[] { ModelEntity.class,
-				Integer.class, Integer.class, Scaling.class }, new Class[] {
-				Group.class, Integer.class, Integer.class }, new Class[] {
-				Group.class, Integer.class, Integer.class, Scaling.class });
+		super(true, false, new Class[] { ModelEntity.class },
+				new Class[] { Group.class });
 	}
 
 	@Override
@@ -124,8 +121,8 @@ public class CreateSceneThumbnail extends EditorAction {
 			sceneGroup = (Group) args[0];
 			scene = Q.getModelEntity(sceneGroup);
 		}
-		int width = (Integer) args[1];
-		int height = (Integer) args[2];
+		int width = (int) (Gdx.graphics.getHeight() - Gdx.graphics.getDensity() * 56);
+		int height = (int) (Gdx.graphics.getHeight() / 2.15f);
 
 		FrameBuffer frameBuffer = new FrameBuffer(Format.RGB888, width, height,
 				false);
@@ -146,8 +143,7 @@ public class CreateSceneThumbnail extends EditorAction {
 				.resolveProject(GameStructure.THUMBNAILS_PATH);
 		thumbnailsFolder.mkdirs();
 
-		String thumbnailPath = GameStructure.THUMBNAILS_PATH
-				+ model.getIdFor(scene) + ".png";
+		String thumbnailPath = Q.getThumbnailPath(model.getIdFor(scene));
 
 		Thumbnail thumbnail = Q.getComponent(scene, Thumbnail.class);
 		thumbnail.setPath(thumbnailPath);
@@ -209,8 +205,8 @@ public class CreateSceneThumbnail extends EditorAction {
 		public void done(BackgroundExecutor backgroundExecutor, String result) {
 			if (assets.isLoaded(thumbnailPath, Texture.class)) {
 				assets.unload(thumbnailPath);
-				assets.load(thumbnailPath, Texture.class);
 			}
+            assets.load(thumbnailPath, Texture.class);
 		}
 
 		@Override
