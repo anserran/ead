@@ -61,9 +61,9 @@ import es.eucm.ead.schema.entities.ModelEntity;
  * scaling is specified, {@link Scaling#stretch} will be used.
  * </dl>
  * 
- * @see CreateThumbnail
+ * @see CreateSceneThumbnail
  */
-public class CreateSceneThumbnailIfNeeded extends CreateThumbnail implements
+public class CreateSceneSceneThumbnailIfNeeded extends CreateSceneThumbnail implements
 		CommandListener {
 
 	private Array<ModelEntity> entities;

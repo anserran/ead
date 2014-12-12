@@ -45,7 +45,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
 import es.eucm.ead.editor.control.Controller;
 import es.eucm.ead.editor.control.MokapController.BackListener;
 import es.eucm.ead.editor.control.Preferences;
@@ -53,7 +52,7 @@ import es.eucm.ead.editor.control.Selection;
 import es.eucm.ead.editor.control.Selection.Context;
 import es.eucm.ead.editor.control.actions.editor.AddLabel;
 import es.eucm.ead.editor.control.actions.editor.ChangeView;
-import es.eucm.ead.editor.control.actions.editor.CreateThumbnail;
+import es.eucm.ead.editor.control.actions.editor.CreateSceneThumbnail;
 import es.eucm.ead.editor.control.actions.editor.ShowContextMenu;
 import es.eucm.ead.editor.control.actions.editor.ShowInfoPanel;
 import es.eucm.ead.editor.control.actions.editor.ShowInfoPanel.TypePanel;
@@ -64,7 +63,6 @@ import es.eucm.ead.editor.control.actions.model.TakePicture;
 import es.eucm.ead.editor.model.Model.SelectionListener;
 import es.eucm.ead.editor.model.Q;
 import es.eucm.ead.editor.model.events.SelectionEvent;
-import es.eucm.ead.editor.model.events.SelectionEvent.Type;
 import es.eucm.ead.editor.view.ModelView;
 import es.eucm.ead.editor.view.SkinConstants;
 import es.eucm.ead.editor.view.builders.FileView;
@@ -215,6 +213,7 @@ public class SceneEditor extends BaseView implements ModelView,
 
 	@Override
 	public void modelChanged(SelectionEvent event) {
+		ModelEntity scene = Q.getModelEntity(getGroupEditor().getRootGroup());
 		interactiveButton.clearActions();
 		if (controller.getModel().getSelection().get(Selection.SCENE_ELEMENT).length != 1) {
 			lockContextOnly(true);
@@ -232,19 +231,14 @@ public class SceneEditor extends BaseView implements ModelView,
 									.touchable(Touchable.enabled)));
 		}
 
-		if (event.getType() == Type.REMOVED
-				&& event.getContextId().equals(Selection.SCENE)
-				&& event.getSelection().length > 0) {
-			ModelEntity scene = (ModelEntity) event.getSelection()[0];
-			if (scene != null) {
-				controller.action(CreateThumbnail.class, scene,
-						(int) (Gdx.graphics.getHeight() - WidgetBuilder
-								.dpToPixels(56)), (int) (Gdx.graphics
-								.getHeight() / 2.15f));
-			}
-		} else {
-			setMode(mode);
+		if (scene != null) {
+			controller.action(CreateSceneThumbnail.class, getGroupEditor()
+					.getRootGroup(),
+					(int) (Gdx.graphics.getHeight() - WidgetBuilder
+							.dpToPixels(56)),
+					(int) (Gdx.graphics.getHeight() / 2.15f));
 		}
+		setMode(mode);
 	}
 
 	@Override
