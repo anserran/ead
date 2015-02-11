@@ -38,6 +38,7 @@ package es.eucm.ead.editor.view.widgets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.math.MathUtils;
@@ -45,8 +46,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pools;
@@ -90,9 +94,24 @@ public class RepoTile extends Tile implements DownloadListener {
 
 	private Controller controller;
 
+	private Label price;
+
+	private Container<Label> container;
+
 	public RepoTile(Controller control, RepoElement elem,
 			final Pixmap thumbPixmap) {
 		super(control.getApplicationAssets().getSkin());
+
+		Skin skin = control.getApplicationAssets().getSkin();
+		LabelStyle style = new LabelStyle();
+		style.font = skin.getFont("small_bold");
+		style.fontColor = Color.WHITE;
+
+		container = new Container<Label>(price = new Label("", style));
+		container.setBackground(skin.getDrawable(SkinConstants.DRAWABLE_BLANK));
+		container.pad(WidgetBuilder.dpToPixels(6));
+
+		addActor(container);
 
 		this.element = elem;
 		this.controller = control;
@@ -131,6 +150,31 @@ public class RepoTile extends Tile implements DownloadListener {
 				}
 			}
 		});
+	}
+
+	public void setPrice(float f) {
+		if (f <= 0) {
+			container.setColor(Color.valueOf("8bc34aff"));
+			price.setText("FREE");
+		} else {
+			container.setColor(Color.valueOf("0091eaff"));
+			String pf = f + "";
+			if ( pf.length() > 3){
+				pf = pf.substring(0, 4);
+			}
+			price.setText(pf + " $");
+		}
+	}
+
+	@Override
+	public void layout() {
+		super.layout();
+		float width = container.getPrefWidth();
+		float height = container.getPrefHeight();
+
+		container.setSize(width, height);
+
+		container.setPosition(getWidth() - width, getHeight() - height);
 	}
 
 	private void fireClickedInLibrary() {
@@ -221,6 +265,7 @@ public class RepoTile extends Tile implements DownloadListener {
 		if (state == State.DOWNLOADED) {
 			state = State.IN_LIBRARY;
 			setBottom(null);
+			container.remove();
 			setMarker(getMarker(SkinConstants.IC_CLOUD_DONE));
 		} else {
 			error("Element added to library in an invalid state: " + state);

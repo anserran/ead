@@ -116,6 +116,7 @@ public class SearchView implements ViewBuilder, BackListener, WorkerListener {
 
 	@Override
 	public Actor getView(Object... args) {
+		search();
 		return view;
 	}
 

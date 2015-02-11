@@ -314,6 +314,9 @@ public class WidgetBuilder {
 			Pixmap thumbnailPixmap) {
 		Image image = new Image(new TextureDrawable(background));
 		RepoTile tile = new RepoTile(controller, elem, thumbnailPixmap);
+		float price = (Math.round((Math.random() * 100))) / 100.0f;
+		price -= 0.5f;
+		tile.setPrice(price);
 		tile.setBackground(image);
 		tile.setText(Q.getRepoElementName(elem));
 		return tile;
