@@ -223,7 +223,7 @@ public class ComponentLoader {
 			} else {
 				entity.add(c);
 				// Special cases
-				if (c instanceof RendererComponent) {
+				if (c instanceof RendererComponent && !(entity.getGroup() instanceof RendererActor)) {
 					RendererComponent rendererComponent = (RendererComponent) c;
 					entity.setGroup(rendererComponent.getRendererActor());
 					entity.add(rendererComponent);

@@ -32,6 +32,9 @@
             "type": "number",
             "default": 1
         },
+        "color": {
+            "$ref": "../data/color.json"
+        },
         "components": {
             "type": "array",
             "items": {

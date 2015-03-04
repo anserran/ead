@@ -36,6 +36,7 @@
  */
 package es.eucm.ead.engine.entities.actors;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
@@ -75,7 +76,13 @@ public class RendererActor extends EntityGroup {
 		}
 	}
 
-	@Override
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.setColor(1.0f, 1.0f, 1.0f, parentAlpha);
+        super.draw(batch, parentAlpha);
+    }
+
+    @Override
 	public float getPrefWidth() {
 		return getChildrenMaxWidth();
 	}
