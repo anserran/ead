@@ -36,15 +36,14 @@
  */
 package es.eucm.ead.engine.components.renderers.frames;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.utils.Array;
-import es.eucm.ead.engine.components.renderers.CollidableRendererComponent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import es.eucm.ead.engine.entities.actors.RendererActor;
 
 /**
  * Created by Javier Torrente on 4/06/14.
  */
-public class EmptyRendererComponent extends CollidableRendererComponent {
+public class EmptyRendererComponent extends RendererActor {
 
 	protected float width;
 
@@ -52,35 +51,14 @@ public class EmptyRendererComponent extends CollidableRendererComponent {
 
 	private boolean hitAll;
 
-	@Override
-	public void draw(Batch batch) {
-		// Do nothing
-	}
-
-	@Override
-	public float getWidth() {
-		return width;
-	}
-
-	@Override
-	public float getHeight() {
-		return height;
-	}
-
-	@Override
-	public void setCollider(Array<Polygon> collider) {
-		super.setCollider(collider);
-		updateWidthAndHeight();
-	}
-
 	public void setHitAll(boolean hitAll) {
 		this.hitAll = hitAll;
 	}
 
 	private void updateWidthAndHeight() {
-		if (collider != null) {
+		if (getCollider() != null) {
 			float minX = Float.MAX_VALUE, maxX = Float.MIN_VALUE, minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
-			for (Polygon polygon : collider) {
+			for (Polygon polygon : getCollider()) {
 				for (int i = 0; i < polygon.getVertices().length; i++) {
 					if (i % 2 == 0) {
 						minX = Math.min(minX, polygon.getVertices()[i]);
@@ -97,7 +75,7 @@ public class EmptyRendererComponent extends CollidableRendererComponent {
 	}
 
 	@Override
-	public boolean hit(float x, float y) {
-		return hitAll || super.hit(x, y);
+	public Actor hit(float x, float y, boolean touchable) {
+		return hitAll ? this : super.hit(x, y, touchable);
 	}
 }

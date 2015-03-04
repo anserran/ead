@@ -37,17 +37,18 @@
 package es.eucm.ead.engine.components.renderers.frames;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.Pools;
+
 import es.eucm.ead.engine.components.renderers.RendererComponent;
 import es.eucm.ead.engine.components.renderers.frames.sequences.Sequence;
+import es.eucm.ead.engine.entities.actors.RendererActor;
 
 /**
  * Created by Javier Torrente on 2/02/14.
  */
-public class FramesComponent extends RendererComponent {
+public class FramesComponent extends RendererActor {
 
 	protected Array<Frame> frames;
 	private int currentFrameIndex;
@@ -74,35 +75,6 @@ public class FramesComponent extends RendererComponent {
 		}
 	}
 
-	@Override
-	public void draw(Batch batch) {
-		if (getCurrentFrame() != null) {
-			getCurrentFrame().draw(batch);
-		}
-	}
-
-	@Override
-	public Array<Polygon> getCollider() {
-		Frame currentFrame = getCurrentFrame();
-		return currentFrame == null ? null : currentFrame.getRenderer()
-				.getCollider();
-	}
-
-	@Override
-	public boolean hit(float x, float y) {
-		return getCurrentFrame() != null && getCurrentFrame().hit(x, y);
-	}
-
-	@Override
-	public float getWidth() {
-		return getCurrentFrame() == null ? 0 : getCurrentFrame().getWidth();
-	}
-
-	@Override
-	public float getHeight() {
-		return getCurrentFrame() == null ? 0 : getCurrentFrame().getHeight();
-	}
-
 	public void setSequence(Sequence sequence) {
 		function = sequence;
 	}
@@ -112,10 +84,10 @@ public class FramesComponent extends RendererComponent {
 	}
 
 	/**
-	 * Adds a new frame with the given renderer. If {@code duration == 0}, the
+	 * Adds a new frame with the given renderer. If {@code duration <= 0}, the
 	 * frame is ignored.
 	 */
-	public void addFrame(RendererComponent renderer, float duration) {
+	public void addFrame(Actor renderer, float duration) {
 		if (duration > 0) {
 			Frame frame = new Frame(renderer, duration);
 			if (currentFrame == null) {
@@ -160,41 +132,19 @@ public class FramesComponent extends RendererComponent {
 	 */
 	public static class Frame {
 
-		private RendererComponent renderer;
+		private Actor renderer;
 
 		private float duration;
 
 		private float elapsedTime;
 
-		private Frame(RendererComponent renderer, float duration) {
+		private Frame(Actor renderer, float duration) {
 			this.renderer = renderer;
 			this.duration = duration;
 		}
 
-		public void draw(Batch batch) {
-			// Just delegate to delegateRenderer
-			if (renderer != null)
-				renderer.draw(batch);
-		}
-
-		private RendererComponent getRenderer() {
+		private Actor getRenderer() {
 			return renderer;
-		}
-
-		public float getHeight() {
-			if (renderer != null)
-				return renderer.getHeight();
-			return 0;
-		}
-
-		public float getWidth() {
-			if (renderer != null)
-				return renderer.getWidth();
-			return 0;
-		}
-
-		public boolean hit(float x, float y) {
-			return renderer != null && renderer.hit(x, y);
 		}
 
 		public void act(float delta) {

@@ -56,7 +56,7 @@ import es.eucm.ead.schema.entities.ModelEntity;
 import es.eucm.ead.schema.renderers.Renderer;
 import es.eucm.ead.schema.renderers.State;
 import es.eucm.ead.schema.renderers.States;
-import es.eucm.ead.engine.components.renderers.StatesComponent;
+import es.eucm.ead.engine.components.renderers.StatesActor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,7 +65,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Tests {@link ChangeState} and {@link StatesComponent} in general Created by
+ * Tests {@link ChangeState} and {@link es.eucm.ead.engine.components.renderers.StatesActor} in general Created by
  * jtorrente on 16/01/15.
  */
 public class StatesComponentTest extends EngineTest implements EntityListener {
@@ -89,7 +89,7 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 
 	@Test
 	public void testZeroStatesEntity() {
-		StatesComponent sc = buildEntityWithStates(0);
+		StatesActor sc = buildEntityWithStates(0);
 		assertEquals(0, sc.getHeight(), 0.001F);
 		assertEquals(0, sc.getWidth(), 0.001F);
 		assertNull(sc.getCollider());
@@ -99,7 +99,7 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 
 	@Test
 	public void testDefault() {
-		StatesComponent sc = buildEntityWithStates(2, new String[] { "",
+		StatesActor sc = buildEntityWithStates(2, new String[] { "",
 				"default" });
 		assertEquals(200, sc.getHeight(), 0.001F);
 		assertEquals(2, sc.getWidth(), 0.001F);
@@ -108,23 +108,23 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 
 	@Test
 	public void testEffect() {
-		StatesComponent sc = buildEntityWithStates(2, new String[] { "",
+		StatesActor sc = buildEntityWithStates(2, new String[] { "",
 				"default" });
 		ChangeState effect = new ChangeState();
 		effect.setStateTag("tag1");
 		changeStateExecutor
 				.execute(
 						gameLoop.getEntitiesFor(
-								Family.all(StatesComponent.class).get())
+								Family.all(StatesActor.class).get())
 								.iterator().next(), effect);
 		assertEquals(100, sc.getHeight(), 0.001F);
 	}
 
-	private StatesComponent buildEntityWithStates(int nStates) {
+	private StatesActor buildEntityWithStates(int nStates) {
 		return buildEntityWithStates(nStates, new String[nStates]);
 	}
 
-	private StatesComponent buildEntityWithStates(int nStates,
+	private StatesActor buildEntityWithStates(int nStates,
 			String[] additionalStates) {
 		ModelEntity modelEntity = new ModelEntity();
 		States states = new States();
@@ -140,7 +140,7 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 			states.getStates().add(state);
 		}
 		EngineEntity entity = entitiesLoader.toEngineEntity(modelEntity);
-		StatesComponent sc = entity.getComponent(StatesComponent.class);
+		StatesActor sc = entity.getComponent(StatesActor.class);
 		gameLoop.addEntity(entity);
 		gameLoop.update(0);
 		return sc;

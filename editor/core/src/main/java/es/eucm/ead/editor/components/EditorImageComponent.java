@@ -44,12 +44,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Polygon;
 import es.eucm.ead.editor.control.Preferences;
-import es.eucm.ead.engine.components.renderers.ImageComponent;
+import es.eucm.ead.engine.components.renderers.ImageActor;
 
 /**
  * Created by angel on 12/05/14.
  */
-public class EditorImageComponent extends ImageComponent {
+public class EditorImageComponent extends ImageActor {
 
 	private ShapeRenderer shapeRenderer;
 

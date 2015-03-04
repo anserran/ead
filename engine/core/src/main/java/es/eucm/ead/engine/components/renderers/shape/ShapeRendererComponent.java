@@ -36,10 +36,10 @@
  */
 package es.eucm.ead.engine.components.renderers.shape;
 
-import es.eucm.ead.engine.components.renderers.ImageComponent;
+import es.eucm.ead.engine.components.renderers.ImageActor;
 
 /**
  * Created by Javier Torrente on 8/06/14.
  */
-public class ShapeRendererComponent extends ImageComponent {
+public class ShapeRendererComponent extends ImageActor {
 }

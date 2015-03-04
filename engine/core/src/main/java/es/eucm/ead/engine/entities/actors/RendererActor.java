@@ -36,67 +36,49 @@
  */
 package es.eucm.ead.engine.entities.actors;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Array;
 
-import es.eucm.ead.engine.components.renderers.RendererComponent;
+public class RendererActor extends EntityGroup {
 
-public class RendererActor extends EntityGroup implements Poolable {
+	private Array<Polygon> collider;
 
-	protected RendererComponent renderer;
-
-	public void setRenderer(RendererComponent renderer) {
-		this.renderer = renderer;
-		this.setWidth(renderer.getWidth());
-		this.setHeight(renderer.getHeight());
+	public void setCollider(Array<Polygon> collider) {
+		this.collider = collider;
 	}
 
-	@Override
-	public void act(float delta) {
-		super.act(delta);
-		renderer.act(delta);
+	public Array<Polygon> getCollider() {
+		return collider;
 	}
 
-	@Override
-	public void drawChildren(Batch batch, float parentAlpha) {
-		if (renderer != null) {
-			// Set alpha and color
-			float alpha = this.getColor().a;
-			this.getColor().a *= parentAlpha;
-			batch.setColor(this.getColor());
-
-			renderer.draw(batch);
-
-			// Restore alpha
-			this.getColor().a = alpha;
-
-		}
-		super.drawChildren(batch, parentAlpha);
+	/**
+	 * Resets the renderer to its initial state
+	 */
+	public void restart() {
 	}
 
-	@Override
-	public float getWidth() {
-		return renderer == null ? 0 : renderer.getWidth();
-	}
-
-	@Override
-	public float getHeight() {
-		return renderer == null ? 0 : renderer.getHeight();
-	}
-
-	@Override
-	public void reset() {
-		this.renderer = null;
-	}
-
-	@Override
+	/**
+	 * @param x
+	 *            coordinate in the renderer system
+	 * @param y
+	 *            coordinate in the renderer system
+	 * @return if the given point hits the renderer
+	 */
 	public Actor hit(float x, float y, boolean touchable) {
 		Actor actor = super.hit(x, y, touchable);
-		if (actor == null && isTouchable()) {
-			return renderer != null && renderer.hit(x, y) ? this : null;
-		} else {
-			return actor;
+		if (actor == this) {
+			Array<Polygon> collider = getCollider();
+			if (collider != null && collider.size > 0) {
+				int polygonsHit = 0;
+				for (Polygon p : collider) {
+					if (p.contains(x, y)) {
+						polygonsHit++;
+					}
+				}
+				return polygonsHit % 2 == 1 ? this : null;
+			}
 		}
+		return actor;
 	}
 }

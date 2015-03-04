@@ -42,8 +42,9 @@ import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
+import es.eucm.ead.engine.entities.actors.RendererActor;
 
-public class SpineAnimationComponent extends CollidableRendererComponent {
+public class SpineActor extends RendererActor {
 
 	private SkeletonRenderer skeletonRenderer = new SkeletonRenderer();
 
@@ -69,7 +70,7 @@ public class SpineAnimationComponent extends CollidableRendererComponent {
 	}
 
 	@Override
-	public void draw(Batch batch) {
+	public void draw(Batch batch, float parentAlpha) {
 		state.apply(skeleton);
 		skeleton.updateWorldTransform();
 		skeletonRenderer.draw(batch, skeleton);

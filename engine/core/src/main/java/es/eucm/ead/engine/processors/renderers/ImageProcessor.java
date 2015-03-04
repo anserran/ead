@@ -43,7 +43,7 @@ import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.Assets.AssetLoadedCallback;
 import es.eucm.ead.engine.assets.GameAssets;
 import es.eucm.ead.engine.assets.ScaledTexture;
-import es.eucm.ead.engine.components.renderers.ImageComponent;
+import es.eucm.ead.engine.components.renderers.ImageActor;
 import es.eucm.ead.engine.components.renderers.RendererComponent;
 import es.eucm.ead.schema.renderers.Image;
 
@@ -55,7 +55,7 @@ public class ImageProcessor extends RendererProcessor<Image> {
 
 	@Override
 	public RendererComponent getComponent(Image image) {
-		final ImageComponent imageComponent = createComponent();
+		final ImageActor imageComponent = createComponent();
 		gameAssets.get(image.getUri() + ".tex", ScaledTexture.class,
 				new AssetLoadedCallback<ScaledTexture>() {
 					@Override
@@ -74,7 +74,7 @@ public class ImageProcessor extends RendererProcessor<Image> {
 		return imageComponent;
 	}
 
-	protected void createCollider(Image image, ImageComponent component) {
+	protected void createCollider(Image image, ImageActor component) {
 		Array<es.eucm.ead.schema.data.shape.Polygon> schemaCollider = image
 				.getCollider();
 		if (schemaCollider != null && schemaCollider.size > 0) {
@@ -92,7 +92,7 @@ public class ImageProcessor extends RendererProcessor<Image> {
 		}
 	}
 
-	protected ImageComponent createComponent() {
-		return gameLoop.createComponent(ImageComponent.class);
+	protected ImageActor createComponent() {
+		return gameLoop.createComponent(ImageActor.class);
 	}
 }

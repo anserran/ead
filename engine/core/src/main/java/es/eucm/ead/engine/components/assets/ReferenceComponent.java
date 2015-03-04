@@ -42,7 +42,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import es.eucm.ead.engine.GameLoop;
+
 import es.eucm.ead.engine.components.renderers.RendererComponent;
+import es.eucm.ead.engine.utils.EngineUtils;
 
 /**
  * References for entities
@@ -56,6 +58,14 @@ public class ReferenceComponent extends RendererComponent implements Poolable {
 		this.group = group;
 		this.gameLoop = gameLoop;
 		group.setTransform(false);
+	}
+
+	@Override
+	public void act(float delta) {
+		if (group != null) {
+            EngineUtils.adjustGroup(group);
+			group.act(delta);
+		}
 	}
 
 	@Override

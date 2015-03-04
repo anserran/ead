@@ -45,7 +45,7 @@ import es.eucm.ead.editor.components.EditorImageComponent;
 import es.eucm.ead.editor.utils.GeometryUtils;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
-import es.eucm.ead.engine.components.renderers.ImageComponent;
+import es.eucm.ead.engine.components.renderers.ImageActor;
 import es.eucm.ead.engine.components.renderers.RendererComponent;
 import es.eucm.ead.engine.processors.renderers.ImageProcessor;
 import es.eucm.ead.schema.renderers.Image;
@@ -98,7 +98,7 @@ public class EditorImageProcessor extends ImageProcessor {
 	}
 
 	@Override
-	protected ImageComponent createComponent() {
+	protected ImageActor createComponent() {
 		EditorImageComponent component = gameLoop
 				.createComponent(EditorImageComponent.class);
 		component.setShapeRenderer(shapeRenderer);

@@ -41,7 +41,7 @@ import es.eucm.ead.engine.ComponentLoader;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
 import es.eucm.ead.engine.components.renderers.RendererComponent;
-import es.eucm.ead.engine.components.renderers.StatesComponent;
+import es.eucm.ead.engine.components.renderers.StatesActor;
 import es.eucm.ead.schema.renderers.State;
 import es.eucm.ead.schema.renderers.States;
 
@@ -57,7 +57,7 @@ public class StatesProcessor extends RendererProcessor<States> {
 
 	@Override
 	public Component getComponent(States component) {
-		StatesComponent states = createStatesComponent();
+		StatesActor states = createStatesComponent();
 		for (State state : component.getStates()) {
 			states.addRenderer(state.getStates(),
 					(RendererComponent) componentLoader.toEngineComponent(state
@@ -66,7 +66,7 @@ public class StatesProcessor extends RendererProcessor<States> {
 		return states;
 	}
 
-	protected StatesComponent createStatesComponent() {
-		return gameLoop.createComponent(StatesComponent.class);
+	protected StatesActor createStatesComponent() {
+		return gameLoop.createComponent(StatesActor.class);
 	}
 }

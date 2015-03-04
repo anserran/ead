@@ -13,7 +13,7 @@ import es.eucm.ead.engine.components.renderers.frames.FramesComponent.Frame;
 
 /**
  * A widget that displays the {@link es.eucm.ead.schema.renderers.Frame frames}
- * with the help of {@link FramesComponent}. Used by the {@link AnimationEditor}
+ * with the help of {@link es.eucm.ead.engine.components.renderers.frames.FramesComponent}. Used by the {@link AnimationEditor}
  * . Also listens to events such as
  * {@link FrameEditionListener#frameTimeChanged(int, float)} and
  * {@link FrameEditionListener#frameSelected(int)} in order to correctly
