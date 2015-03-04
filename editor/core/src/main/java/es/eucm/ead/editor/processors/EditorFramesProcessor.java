@@ -36,11 +36,11 @@
  */
 package es.eucm.ead.editor.processors;
 
-import es.eucm.ead.editor.components.EditorFramesComponent;
+import es.eucm.ead.editor.components.EditorFramesActor;
 import es.eucm.ead.engine.ComponentLoader;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
-import es.eucm.ead.engine.components.renderers.frames.FramesComponent;
+import es.eucm.ead.engine.components.renderers.frames.FramesActor;
 import es.eucm.ead.engine.processors.renderers.FramesProcessor;
 
 public class EditorFramesProcessor extends FramesProcessor {
@@ -51,9 +51,8 @@ public class EditorFramesProcessor extends FramesProcessor {
 	}
 
 	@Override
-	protected FramesComponent createComponent() {
-		EditorFramesComponent component = gameLoop
-				.createComponent(EditorFramesComponent.class);
+	protected FramesActor createActor() {
+		EditorFramesActor component = new EditorFramesActor();
 		component.setGameLoop(gameLoop);
 		return component;
 	}

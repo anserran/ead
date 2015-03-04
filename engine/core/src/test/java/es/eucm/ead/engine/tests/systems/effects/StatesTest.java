@@ -40,13 +40,14 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.utils.Array;
 import es.eucm.ead.engine.EngineTest;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.components.renderers.RendererComponent;
+import es.eucm.ead.engine.components.renderers.StatesActor;
 import es.eucm.ead.engine.entities.EngineEntity;
+import es.eucm.ead.engine.entities.actors.RendererActor;
 import es.eucm.ead.engine.processors.ComponentProcessor;
 import es.eucm.ead.engine.processors.renderers.StatesProcessor;
 import es.eucm.ead.engine.systems.EffectsSystem;
@@ -56,19 +57,19 @@ import es.eucm.ead.schema.entities.ModelEntity;
 import es.eucm.ead.schema.renderers.Renderer;
 import es.eucm.ead.schema.renderers.State;
 import es.eucm.ead.schema.renderers.States;
-import es.eucm.ead.engine.components.renderers.StatesActor;
+import es.eucm.ead.schemax.Layer;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Tests {@link ChangeState} and {@link es.eucm.ead.engine.components.renderers.StatesActor} in general Created by
- * jtorrente on 16/01/15.
+ * Tests {@link ChangeState} and
+ * {@link es.eucm.ead.engine.components.renderers.StatesActor} in general
+ * Created by jtorrente on 16/01/15.
  */
-public class StatesComponentTest extends EngineTest implements EntityListener {
+public class StatesTest extends EngineTest implements EntityListener {
 
 	private ChangeStateExecutor changeStateExecutor;
 
@@ -99,24 +100,23 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 
 	@Test
 	public void testDefault() {
-		StatesActor sc = buildEntityWithStates(2, new String[] { "",
-				"default" });
+		StatesActor sc = buildEntityWithStates(2,
+				new String[] { "", "default" });
 		assertEquals(200, sc.getHeight(), 0.001F);
 		assertEquals(2, sc.getWidth(), 0.001F);
-		assertNotNull(sc.getCollider());
 	}
 
 	@Test
 	public void testEffect() {
-		StatesActor sc = buildEntityWithStates(2, new String[] { "",
-				"default" });
+		StatesActor sc = buildEntityWithStates(2,
+				new String[] { "", "default" });
 		ChangeState effect = new ChangeState();
 		effect.setStateTag("tag1");
-		changeStateExecutor
-				.execute(
-						gameLoop.getEntitiesFor(
-								Family.all(StatesActor.class).get())
-								.iterator().next(), effect);
+		changeStateExecutor.execute(
+				gameLoop.getEntitiesFor(
+						Family.all(RendererComponent.class).get()).iterator()
+						.next(), effect);
+		stage.draw();
 		assertEquals(100, sc.getHeight(), 0.001F);
 	}
 
@@ -140,10 +140,12 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 			states.getStates().add(state);
 		}
 		EngineEntity entity = entitiesLoader.toEngineEntity(modelEntity);
-		StatesActor sc = entity.getComponent(StatesActor.class);
+		RendererComponent sc = entity.getComponent(RendererComponent.class);
 		gameLoop.addEntity(entity);
 		gameLoop.update(0);
-		return sc;
+		gameView.addEntityToLayer(Layer.SCENE, entity);
+		stage.draw();
+		return (StatesActor) sc.getRendererActor().getChildren().get(0);
 	}
 
 	@Override
@@ -165,9 +167,11 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 
 		@Override
 		public Component getComponent(MockRenderer component) {
-			MockRendererComponent mockRendererComponent = new MockRendererComponent();
+			MockRendererActor mockRendererComponent = new MockRendererActor();
 			mockRendererComponent.value = component.value;
-			return mockRendererComponent;
+			RendererComponent rendererComponent = new RendererComponent();
+			rendererComponent.addRenderer(mockRendererComponent);
+			return rendererComponent;
 		}
 	}
 
@@ -175,22 +179,17 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 		public int value;
 	}
 
-	private static class MockRendererComponent extends RendererComponent {
+	private static class MockRendererActor extends RendererActor {
 
 		public int value;
 
 		@Override
-		public void draw(Batch batch) {
-
-		}
-
-		@Override
-		public float getWidth() {
+		public float getPrefWidth() {
 			return value;
 		}
 
 		@Override
-		public float getHeight() {
+		public float getPrefHeight() {
 			return value * 100;
 		}
 
@@ -201,11 +200,6 @@ public class StatesComponentTest extends EngineTest implements EntityListener {
 			newPolygon.setPosition(value, value);
 			collider.add(newPolygon);
 			return collider;
-		}
-
-		@Override
-		public void reset() {
-
 		}
 	}
 }

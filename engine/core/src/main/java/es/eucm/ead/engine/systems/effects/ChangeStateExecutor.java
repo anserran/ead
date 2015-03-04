@@ -37,7 +37,7 @@
 package es.eucm.ead.engine.systems.effects;
 
 import com.badlogic.ashley.core.Entity;
-import es.eucm.ead.engine.components.renderers.StatesActor;
+import es.eucm.ead.engine.components.renderers.RendererComponent;
 import es.eucm.ead.schema.effects.ChangeState;
 
 /**
@@ -47,10 +47,11 @@ public class ChangeStateExecutor extends EffectExecutor<ChangeState> {
 
 	@Override
 	public void execute(Entity target, ChangeState effect) {
-		StatesActor statesComponent = target
-				.getComponent(StatesActor.class);
+		RendererComponent statesComponent = target
+				.getComponent(RendererComponent.class);
 		if (statesComponent != null) {
-			statesComponent.changeState(effect.getStateTag());
+			statesComponent.getRendererActor()
+					.changeState(effect.getStateTag());
 		}
 	}
 }

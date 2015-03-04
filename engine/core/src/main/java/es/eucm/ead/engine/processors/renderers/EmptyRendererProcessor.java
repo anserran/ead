@@ -42,7 +42,8 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.utils.Array;
 
 import es.eucm.ead.engine.GameLoop;
-import es.eucm.ead.engine.components.renderers.frames.EmptyRendererComponent;
+import es.eucm.ead.engine.components.renderers.RendererComponent;
+import es.eucm.ead.engine.components.renderers.frames.EmptyActor;
 import es.eucm.ead.engine.utils.ShapeToCollider;
 import es.eucm.ead.schema.renderers.EmptyRenderer;
 
@@ -59,22 +60,27 @@ public class EmptyRendererProcessor extends RendererProcessor<EmptyRenderer> {
 
 	@Override
 	public Component getComponent(EmptyRenderer component) {
-		EmptyRendererComponent emptyRendererComponent = gameLoop
-				.createComponent(EmptyRendererComponent.class);
+		EmptyActor emptyRendererComponent = createActor();
 		read(emptyRendererComponent, component);
-		return emptyRendererComponent;
+		RendererComponent rendererComponent = gameLoop
+				.createComponent(RendererComponent.class);
+		rendererComponent.addRenderer(emptyRendererComponent);
+		return rendererComponent;
 	}
 
-	protected void read(EmptyRendererComponent emptyRendererComponent,
-			EmptyRenderer component) {
+	protected void read(EmptyActor emptyActor, EmptyRenderer component) {
 		if (component.getShape() != null) {
 			Array<Polygon> collider = new Array<Polygon>();
 			Polygon polygon = ShapeToCollider.buildShapeCollider(
 					component.getShape(), N_SIDES_FOR_CIRCLE);
 			collider.add(polygon);
-			emptyRendererComponent.setCollider(collider);
+			emptyActor.setCollider(collider);
 		}
 
-		emptyRendererComponent.setHitAll(component.isHitAll());
+		emptyActor.setHitAll(component.isHitAll());
+	}
+
+	protected EmptyActor createActor() {
+		return new EmptyActor();
 	}
 }

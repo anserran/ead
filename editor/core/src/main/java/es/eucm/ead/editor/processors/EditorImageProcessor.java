@@ -41,7 +41,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.vividsolutions.jts.geom.Geometry;
 
-import es.eucm.ead.editor.components.EditorImageComponent;
+import es.eucm.ead.editor.components.EditorImageActor;
 import es.eucm.ead.editor.utils.GeometryUtils;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
@@ -91,16 +91,14 @@ public class EditorImageProcessor extends ImageProcessor {
 				}
 				pixmap.dispose();
 			} catch (Exception e) {
-
 			}
 		}
 		return super.getComponent(image);
 	}
 
 	@Override
-	protected ImageActor createComponent() {
-		EditorImageComponent component = gameLoop
-				.createComponent(EditorImageComponent.class);
+	protected ImageActor createActor() {
+		EditorImageActor component = new EditorImageActor();
 		component.setShapeRenderer(shapeRenderer);
 		return component;
 	}

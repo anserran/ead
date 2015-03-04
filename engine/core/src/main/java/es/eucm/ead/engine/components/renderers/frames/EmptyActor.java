@@ -34,29 +34,65 @@
  *      You should have received a copy of the GNU Lesser General Public License
  *      along with eAdventure.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.eucm.ead.engine.components.renderers.shape;
+package es.eucm.ead.engine.components.renderers.frames;
 
-public class RectangleRendererComponent extends ShapeRendererComponent {
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
+import es.eucm.ead.engine.entities.actors.RendererActor;
 
-	private float width;
+/**
+ * Created by Javier Torrente on 4/06/14.
+ */
+public class EmptyActor extends RendererActor {
 
-	private float height;
+	protected float width;
 
-	public void setWidth(float width) {
-		this.width = width;
-	}
+	protected float height;
 
-	public void setHeight(float height) {
-		this.height = height;
+	private boolean hitAll;
+
+	public void setHitAll(boolean hitAll) {
+		this.hitAll = hitAll;
 	}
 
 	@Override
-	public float getWidth() {
+	public void setCollider(Array<Polygon> collider) {
+		super.setCollider(collider);
+		updateWidthAndHeight();
+	}
+
+	private void updateWidthAndHeight() {
+		if (getCollider() != null) {
+			float minX = Float.MAX_VALUE, maxX = Float.MIN_VALUE, minY = Float.MAX_VALUE, maxY = Float.MIN_VALUE;
+			for (Polygon polygon : getCollider()) {
+				for (int i = 0; i < polygon.getVertices().length; i++) {
+					if (i % 2 == 0) {
+						minX = Math.min(minX, polygon.getVertices()[i]);
+						maxX = Math.max(maxX, polygon.getVertices()[i]);
+					} else {
+						minY = Math.min(minY, polygon.getVertices()[i]);
+						maxY = Math.max(maxY, polygon.getVertices()[i]);
+					}
+				}
+			}
+			width = maxX - minX;
+			height = maxY - minY;
+		}
+	}
+
+	@Override
+	public float getPrefWidth() {
 		return width;
 	}
 
 	@Override
-	public float getHeight() {
+	public float getPrefHeight() {
 		return height;
+	}
+
+	@Override
+	public Actor hit(float x, float y, boolean touchable) {
+		return hitAll ? this : super.hit(x, y, touchable);
 	}
 }

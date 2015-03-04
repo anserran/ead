@@ -36,19 +36,16 @@
  */
 package es.eucm.ead.editor.processors;
 
-import com.badlogic.ashley.core.Component;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-
 import es.eucm.ead.editor.assets.ApplicationAssets;
-import es.eucm.ead.editor.components.EditorEmptyRendererComponent;
+import es.eucm.ead.editor.components.EditorEmptyActor;
 import es.eucm.ead.editor.control.engine.Engine;
 import es.eucm.ead.engine.GameLoop;
+import es.eucm.ead.engine.components.renderers.frames.EmptyActor;
 import es.eucm.ead.engine.processors.renderers.EmptyRendererProcessor;
-import es.eucm.ead.schema.renderers.EmptyRenderer;
 
 public class EditorEmptyRendererProcessor extends EmptyRendererProcessor {
 
@@ -71,12 +68,10 @@ public class EditorEmptyRendererProcessor extends EmptyRendererProcessor {
 	}
 
 	@Override
-	public Component getComponent(EmptyRenderer component) {
-		EditorEmptyRendererComponent emptyRendererComponent = gameLoop
-				.createComponent(EditorEmptyRendererComponent.class);
-		emptyRendererComponent.setDrawable(drawable);
-		emptyRendererComponent.setEngine(engine);
-		read(emptyRendererComponent, component);
-		return emptyRendererComponent;
+	protected EmptyActor createActor() {
+		EditorEmptyActor emptyRenderer = new EditorEmptyActor();
+		emptyRenderer.setDrawable(drawable);
+		emptyRenderer.setEngine(engine);
+		return super.createActor();
 	}
 }

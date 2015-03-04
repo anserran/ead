@@ -39,9 +39,9 @@ package es.eucm.ead.editor.components;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import es.eucm.ead.editor.control.engine.Engine;
-import es.eucm.ead.engine.components.renderers.frames.EmptyRendererComponent;
+import es.eucm.ead.engine.components.renderers.frames.EmptyActor;
 
-public class EditorEmptyRendererComponent extends EmptyRendererComponent {
+public class EditorEmptyActor extends EmptyActor {
 
 	private Engine engine;
 
@@ -56,7 +56,7 @@ public class EditorEmptyRendererComponent extends EmptyRendererComponent {
 	}
 
 	@Override
-	public void draw(Batch batch) {
+	public void drawChildren(Batch batch, float parentAlpha) {
 		if (!engine.isRunning() && getCollider() != null) {
 			drawable.draw(batch, 0, 0, width, height);
 		}

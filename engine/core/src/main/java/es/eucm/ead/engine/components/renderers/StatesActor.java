@@ -71,19 +71,26 @@ public class StatesActor extends RendererActor {
 	 * 
 	 * @param stateTag
 	 *            The tag identifying the new state
-	 * @return if state was updated
 	 */
-	public boolean changeState(String stateTag) {
+	public void changeState(String stateTag) {
 		for (StateData state : states) {
 			if (state.states.contains(stateTag, false) && state != currentState) {
 				currentState = state;
 				currentState.renderer.restart();
 				clearChildren();
 				addActor(currentState.renderer);
-				return true;
 			}
 		}
-		return false;
+	}
+
+	@Override
+	public float getPrefWidth() {
+		return currentState == null ? 0 : currentState.renderer.getPrefWidth();
+	}
+
+	@Override
+	public float getPrefHeight() {
+		return currentState == null ? 0 : currentState.renderer.getPrefHeight();
 	}
 
 	private static final class StateData {

@@ -34,71 +34,27 @@
  *      You should have received a copy of the GNU Lesser General Public License
  *      along with eAdventure.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.eucm.ead.engine.components.assets;
+package es.eucm.ead.editor.components;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool.Poolable;
 import es.eucm.ead.engine.GameLoop;
+import es.eucm.ead.engine.components.renderers.frames.FramesActor;
 
-import es.eucm.ead.engine.components.renderers.RendererComponent;
-import es.eucm.ead.engine.utils.EngineUtils;
+public class EditorFramesActor extends FramesActor {
 
-/**
- * References for entities
- */
-public class ReferenceComponent extends RendererComponent implements Poolable {
-
-	private Group group;
 	private GameLoop gameLoop;
 
-	public void set(Group group, GameLoop gameLoop) {
-		this.group = group;
+	public void setGameLoop(GameLoop gameLoop) {
 		this.gameLoop = gameLoop;
-		group.setTransform(false);
 	}
 
 	@Override
-	public void act(float delta) {
-		if (group != null) {
-            EngineUtils.adjustGroup(group);
-			group.act(delta);
-		}
-	}
-
-	@Override
-	public void draw(Batch batch) {
-		if (group != null) {
-			group.draw(batch, 1.0f);
-		}
-	}
-
-	@Override
-	public float getWidth() {
-		return group == null ? 0 : group.getWidth();
-	}
-
-	@Override
-	public float getHeight() {
-		return group == null ? 0 : group.getHeight();
-	}
-
-	@Override
-	public Array<Polygon> getCollider() {
-		return null;
-	}
-
-	@Override
-	public void reset() {
-		group = null;
-	}
-
-	@Override
-	public void act(float delta) {
-		if (group != null && gameLoop.isPlaying()) {
-			group.act(delta);
+	protected void drawChildren(Batch batch, float parentAlpha) {
+		if (gameLoop.isPlaying()) {
+			super.drawChildren(batch, parentAlpha);
+		} else {
+			setCurrentFrame(0);
+			super.drawChildren(batch, parentAlpha);
 		}
 	}
 }

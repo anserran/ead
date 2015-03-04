@@ -36,7 +36,6 @@
  */
 package es.eucm.ead.engine.processors.renderers;
 
-import com.badlogic.ashley.core.Component;
 import es.eucm.ead.engine.ComponentLoader;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
@@ -56,17 +55,21 @@ public class StatesProcessor extends RendererProcessor<States> {
 	}
 
 	@Override
-	public Component getComponent(States component) {
+	public RendererComponent getComponent(States component) {
+		RendererComponent rendererComponent = gameLoop
+				.createComponent(RendererComponent.class);
 		StatesActor states = createStatesComponent();
 		for (State state : component.getStates()) {
 			states.addRenderer(state.getStates(),
-					(RendererComponent) componentLoader.toEngineComponent(state
-							.getRenderer()));
+					((RendererComponent) componentLoader
+							.toEngineComponent(state.getRenderer()))
+							.getRendererActor());
 		}
-		return states;
+		rendererComponent.addRenderer(states);
+		return rendererComponent;
 	}
 
 	protected StatesActor createStatesComponent() {
-		return gameLoop.createComponent(StatesActor.class);
+		return new StatesActor();
 	}
 }

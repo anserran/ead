@@ -225,9 +225,7 @@ public class ComponentLoader {
 				// Special cases
 				if (c instanceof RendererComponent) {
 					RendererComponent rendererComponent = (RendererComponent) c;
-					RendererActor renderer = Pools.obtain(RendererActor.class);
-					renderer.setRenderer(rendererComponent);
-					entity.setGroup(renderer);
+					entity.setGroup(rendererComponent.getRendererActor());
 					entity.add(rendererComponent);
 				} else if (c instanceof ControlComponent) {
 					Actor control = ((ControlComponent) c).getControl();

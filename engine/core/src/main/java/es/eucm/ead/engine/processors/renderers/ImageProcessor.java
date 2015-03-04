@@ -55,7 +55,11 @@ public class ImageProcessor extends RendererProcessor<Image> {
 
 	@Override
 	public RendererComponent getComponent(Image image) {
-		final ImageActor imageComponent = createComponent();
+		RendererComponent rendererComponent = gameLoop
+				.createComponent(RendererComponent.class);
+		final ImageActor imageComponent = createActor();
+		rendererComponent.addRenderer(imageComponent);
+
 		gameAssets.get(image.getUri() + ".tex", ScaledTexture.class,
 				new AssetLoadedCallback<ScaledTexture>() {
 					@Override
@@ -71,7 +75,7 @@ public class ImageProcessor extends RendererProcessor<Image> {
 					}
 				});
 		createCollider(image, imageComponent);
-		return imageComponent;
+		return rendererComponent;
 	}
 
 	protected void createCollider(Image image, ImageActor component) {
@@ -92,7 +96,7 @@ public class ImageProcessor extends RendererProcessor<Image> {
 		}
 	}
 
-	protected ImageActor createComponent() {
-		return gameLoop.createComponent(ImageActor.class);
+	protected ImageActor createActor() {
+		return new ImageActor();
 	}
 }

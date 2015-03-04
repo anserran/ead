@@ -37,20 +37,40 @@
 package es.eucm.ead.engine.components.renderers;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import es.eucm.ead.engine.entities.actors.RendererActor;
 
 /**
  * Base class for renderer components
  */
-public abstract class RendererComponent extends Component implements
-		Pool.Poolable {
+public class RendererComponent extends Component implements Poolable {
 
-	private Array<RendererActor> renderers = new Array<RendererActor>();
+	private RendererActor parent = new RendererActor();
+
+	public RendererActor getRendererActor() {
+		return parent;
+	}
+
+	public void addRenderer(Actor renderer) {
+		parent.addActor(renderer);
+	}
+
+	@Override
+	public boolean combine(Component component) {
+		if (component instanceof RendererComponent) {
+			for (Actor actor : ((RendererComponent) component).parent
+					.getChildren()) {
+				addRenderer(actor);
+			}
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public void reset() {
-		renderers.clear();
+		parent.clearChildren();
 	}
+
 }

@@ -34,26 +34,12 @@
  *      You should have received a copy of the GNU Lesser General Public License
  *      along with eAdventure.  If not, see <http://www.gnu.org/licenses/>.
  */
-package es.eucm.ead.editor.components;
+package es.eucm.ead.engine.components.renderers.shape;
 
-import es.eucm.ead.engine.GameLoop;
-import es.eucm.ead.engine.components.renderers.frames.FramesComponent;
+import es.eucm.ead.engine.components.renderers.ImageActor;
 
-public class EditorFramesComponent extends FramesComponent {
-
-	private GameLoop gameLoop;
-
-	public void setGameLoop(GameLoop gameLoop) {
-		this.gameLoop = gameLoop;
-	}
-
-	@Override
-	protected Frame getCurrentFrame() {
-		if (!gameLoop.isPlaying()) {
-			if (frames.size > 0) {
-				return frames.get(0);
-			}
-		}
-		return super.getCurrentFrame();
-	}
+/**
+ * Created by Javier Torrente on 8/06/14.
+ */
+public class ShapeActor extends ImageActor {
 }

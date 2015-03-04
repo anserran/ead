@@ -42,6 +42,7 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.assets.GameAssets;
+import es.eucm.ead.engine.components.renderers.RendererComponent;
 import es.eucm.ead.engine.components.renderers.SpineActor;
 import es.eucm.ead.schema.renderers.SpineAnimation;
 
@@ -58,10 +59,12 @@ public class SpineAnimationProcessor extends RendererProcessor<SpineAnimation> {
 		SkeletonJson json = new SkeletonJson(atlas);
 		SkeletonData skeletonData = json.readSkeletonData(gameAssets
 				.resolve(spineAnimation.getUri() + ".json"));
-		SpineActor component = gameLoop
-				.createComponent(SpineActor.class);
+		SpineActor component = new SpineActor();
 		component.setSkeleton(skeletonData);
 		component.setState(spineAnimation.getInitialState());
-		return component;
+		RendererComponent rendererComponent = gameLoop
+				.createComponent(RendererComponent.class);
+		rendererComponent.addRenderer(component);
+		return rendererComponent;
 	}
 }

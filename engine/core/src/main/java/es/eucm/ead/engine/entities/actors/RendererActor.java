@@ -38,6 +38,7 @@ package es.eucm.ead.engine.entities.actors;
 
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.utils.Array;
 
 public class RendererActor extends EntityGroup {
@@ -56,6 +57,41 @@ public class RendererActor extends EntityGroup {
 	 * Resets the renderer to its initial state
 	 */
 	public void restart() {
+		for (Actor actor : getChildren()) {
+			if (actor instanceof RendererActor) {
+				((RendererActor) actor).restart();
+			}
+		}
+	}
+
+	/**
+	 * Changes the state of the renderer
+	 */
+	public void changeState(String stateTag) {
+		for (Actor actor : getChildren()) {
+			if (actor instanceof RendererActor) {
+				((RendererActor) actor).changeState(stateTag);
+			}
+		}
+	}
+
+	@Override
+	public float getPrefWidth() {
+		return getChildrenMaxWidth();
+	}
+
+	@Override
+	public float getPrefHeight() {
+		return getChildrenMaxHeight();
+	}
+
+	@Override
+	public void layout() {
+		for (Actor a : getChildren()) {
+			if (a instanceof Layout) {
+				((Layout) a).pack();
+			}
+		}
 	}
 
 	/**
@@ -65,6 +101,7 @@ public class RendererActor extends EntityGroup {
 	 *            coordinate in the renderer system
 	 * @return if the given point hits the renderer
 	 */
+	@Override
 	public Actor hit(float x, float y, boolean touchable) {
 		Actor actor = super.hit(x, y, touchable);
 		if (actor == this) {
@@ -81,4 +118,5 @@ public class RendererActor extends EntityGroup {
 		}
 		return actor;
 	}
+
 }
