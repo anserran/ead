@@ -122,7 +122,7 @@ public class MokapApplicationListener extends EditorApplicationListener {
 	}
 
 	public void resize(int width, int height) {
-		super.stage.getViewport().update(width, height, true);
+		super.stage.getViewport().update(width, height, false);
 	}
 
 	protected Controller buildController() {

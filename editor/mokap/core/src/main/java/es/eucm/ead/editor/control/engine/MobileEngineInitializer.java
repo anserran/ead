@@ -40,6 +40,7 @@ import es.eucm.ead.editor.control.Controller;
 import es.eucm.ead.editor.processors.EditorEmptyRendererProcessor;
 import es.eucm.ead.editor.processors.EditorFramesProcessor;
 import es.eucm.ead.editor.processors.EditorReferenceProcessor;
+import es.eucm.ead.editor.processors.EditorVideoProcessor;
 import es.eucm.ead.engine.ComponentLoader;
 import es.eucm.ead.engine.DefaultEngineInitializer;
 import es.eucm.ead.engine.EntitiesLoader;
@@ -49,6 +50,7 @@ import es.eucm.ead.engine.variables.VariablesManager;
 import es.eucm.ead.schema.components.Reference;
 import es.eucm.ead.schema.renderers.EmptyRenderer;
 import es.eucm.ead.schema.renderers.Frames;
+import es.eucm.ead.schema.renderers.Video;
 
 public class MobileEngineInitializer extends DefaultEngineInitializer {
 
@@ -74,6 +76,8 @@ public class MobileEngineInitializer extends DefaultEngineInitializer {
 		componentLoader.registerComponentProcessor(Reference.class,
 				new EditorReferenceProcessor(gameLoop, gameAssets,
 						entitiesLoader, controller.getPlatform()));
+		componentLoader.registerComponentProcessor(Video.class,
+				new EditorVideoProcessor(gameLoop, gameAssets, controller.getApplicationAssets(), controller.getEngine()));
 	}
 
 }

@@ -86,6 +86,7 @@ import es.eucm.ead.engine.gdx.AbstractWidget;
 import es.eucm.ead.schema.components.controls.Label;
 import es.eucm.ead.schema.editor.components.GameData;
 import es.eucm.ead.schema.entities.ModelEntity;
+import es.eucm.ead.schema.renderers.Video;
 
 public class SceneEditor extends BaseView implements ModelView,
 		SelectionListener, BackListener, FileChooserListener {
@@ -374,6 +375,14 @@ public class SceneEditor extends BaseView implements ModelView,
 			Label label = new Label();
 			label.setText(fh.readString());
 			controller.action(AddLabel.class, label);
+		} else if (ProjectUtils.isSupportedVideo(fh)) {
+			ModelEntity sceneEntity = new ModelEntity();
+			Video video = new Video();
+			video.setUri(controller.getEditorGameAssets()
+					.copyToProjectIfNeeded(path, Video.class));
+			sceneEntity.getComponents().add(video);
+			controller.action(AddSceneElement.class, sceneEntity);
+
 		} else {
 			controller.action(ShowToast.class, i18N.m("invalid.resource"));
 		}

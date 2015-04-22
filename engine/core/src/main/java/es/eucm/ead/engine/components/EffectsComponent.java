@@ -60,6 +60,10 @@ public class EffectsComponent extends BehaviorComponent implements Poolable {
 		effectList.clear();
 	}
 
+	public void addEffect(Effect effect) {
+		effectList.add(effect);
+	}
+
 	@Override
 	public void addBehavior(Event event, Iterable effects) {
 		for (Object o : effects) {

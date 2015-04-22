@@ -49,6 +49,7 @@ import es.eucm.ead.editor.utils.ProjectUtils;
 import es.eucm.ead.engine.assets.GameAssets;
 import es.eucm.ead.schema.editor.components.Parent;
 import es.eucm.ead.schema.entities.ModelEntity;
+import es.eucm.ead.schema.renderers.Video;
 
 /**
  * This asset manager is meant to deal with the game's assets in the editor.
@@ -173,6 +174,8 @@ public class EditorGameAssets extends GameAssets {
 		} else if (clazz == Music.class
 				|| clazz == com.badlogic.gdx.audio.Sound.class) {
 			return SOUNDS_FOLDER;
+		} else if (clazz == Video.class) {
+			return VIDEO_FOLDER;
 		} else {
 			return null;
 		}

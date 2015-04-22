@@ -402,6 +402,16 @@ public class ProjectUtils {
 				&& "txt".equals(file.extension().toLowerCase());
 	}
 
+	public static boolean isSupportedVideo(FileHandle file) {
+		String path = file.path().toLowerCase();
+		for (String extension : videoExtensions) {
+			if (path.endsWith("." + extension)) {
+				return true;
+			}
+		}
+		return false;
+		}
+		
 	/**
 	 * 
 	 * @return true if the file is a supported audio that can be loaded.

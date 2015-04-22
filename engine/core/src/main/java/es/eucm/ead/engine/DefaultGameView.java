@@ -198,7 +198,7 @@ public class DefaultGameView extends WidgetGroup implements GameView {
 				new FitViewport(width, height, getStage().getViewport()
 						.getCamera()));
 		getStage().getViewport().update(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight(), true);
+				Gdx.graphics.getHeight(), false);
 	}
 
 	@Override

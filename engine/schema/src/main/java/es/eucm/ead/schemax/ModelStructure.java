@@ -56,6 +56,8 @@ public interface ModelStructure {
 
 	public static final String SOUNDS_FOLDER = "sounds/";
 
+	public static final String VIDEO_FOLDER = "video/";
+
 	public static final String GAME_FILE = "game.json";
 
 	public static final String GAME_DEBUG = "game_debug.json";
