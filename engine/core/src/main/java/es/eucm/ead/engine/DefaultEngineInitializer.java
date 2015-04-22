@@ -316,6 +316,8 @@ public class DefaultEngineInitializer implements EngineInitializer {
 				new ShaderProcessor(gameLoop, gameAssets, variablesManager));
 		componentLoader.registerComponentProcessor(Background.class,
 				new BackgroundProcessor(gameLoop, entitiesLoader));
+		componentLoader.registerComponentProcessor(Video.class,
+				new VideoProcessor(gameLoop, gameAssets));
 	}
 
 	private static class LanguageVariableListener implements

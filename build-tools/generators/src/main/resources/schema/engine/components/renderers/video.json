@@ -1,0 +1,14 @@
+{
+    "additionalProperties": false,
+    "javaType": "es.eucm.ead.schema.renderers.Video",
+    "type": "object",
+    "extends": {
+        "$ref": "renderer.json"
+    },
+    "description": "An video asset",
+    "properties": {
+        "uri": {
+            "type": "string"
+        }
+    }
+}

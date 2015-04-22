@@ -36,19 +36,30 @@
  */
 package es.eucm.ead.engine.demos;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import es.eucm.ead.engine.EngineDesktop;
+import es.eucm.ead.engine.demobuilder.ExecutableDemoBuilder;
+import es.eucm.ead.schema.entities.ModelEntity;
+import es.eucm.ead.schema.renderers.Video;
 
-/**
- * VLC video demonstrator.
- * 
- */
-public class VideoDemo {
+public class VideoDemo extends ExecutableDemoBuilder {
 
-	public static void main(String args[]) {
-		EngineDesktop engine = new EngineDesktop(1066, 600);
-		engine.run("videodemo", true);
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+	public VideoDemo() {
+		super("cooldemo");
+	}
+
+	@Override
+	public String getName() {
+		return "Video";
+	}
+
+	@Override
+	protected void doBuild() {
+		ModelEntity entity = game(1600, 900).scene().entity(0, 0)
+				.getLastEntity();
+
+		Video video = new Video();
+		video.setUri("/home/angel/Escritorio/big-buck-bunny_trailer.webm");
+
+		entity.getComponents().add(video);
+
 	}
 }
