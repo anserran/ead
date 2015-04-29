@@ -27,4 +27,9 @@ public class EditorVideoComponent extends VideoComponent {
 			drawable.draw(batch, 0, 0, getWidth(), getHeight());
 		}
 	}
+
+	@Override
+	public boolean hit(float x, float y) {
+		return true;
+	}
 }

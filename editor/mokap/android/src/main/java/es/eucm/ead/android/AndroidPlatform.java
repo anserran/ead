@@ -36,12 +36,6 @@
  */
 package es.eucm.ead.android;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -65,13 +59,11 @@ import android.text.InputType;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.google.android.gms.analytics.Tracker;
-
 import es.eucm.ead.android.EditorActivity.ActivityResultListener;
 import es.eucm.ead.editor.control.Controller;
 import es.eucm.ead.editor.control.DownloadManager;
@@ -83,6 +75,12 @@ import es.eucm.ead.engine.I18N;
 import es.eucm.ead.engine.android.AndroidImageUtils;
 import es.eucm.ead.engine.assets.GameAssets.ImageUtils;
 import es.eucm.ead.schemax.ModelStructure;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 
 public class AndroidPlatform extends MokapPlatform {
 
@@ -513,7 +511,7 @@ public class AndroidPlatform extends MokapPlatform {
 
 	@Override
 	public boolean isDebug() {
-		return (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+		return false && (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
 	}
 
 	@Override

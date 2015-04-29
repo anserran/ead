@@ -36,7 +36,7 @@
  */
 package es.eucm.ead.editor.control.actions.editor;
 
-import es.eucm.ead.editor.control.actions.EnabledOnLoadAction;
+import es.eucm.ead.editor.control.actions.EditorAction;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ import es.eucm.ead.editor.control.actions.EnabledOnLoadAction;
  * <dd>None</dd>
  * </dl>
  */
-public class Paste extends EnabledOnLoadAction {
+public class Paste extends EditorAction {
 
 	public Paste() {
 		super(true, false);
