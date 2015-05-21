@@ -45,7 +45,7 @@ public class LogicGraphBuilder implements GraphBuilder {
 	public Graph newGraph() {
 		Graph graph = new Graph(true);
 		Timer timer = new Timer();
-		timer.setRepeat(0);
+		timer.setRepeat(1);
 		timer.setTime(1.0f);
 		graph.getRoot().setContent(timer);
 		return graph;
