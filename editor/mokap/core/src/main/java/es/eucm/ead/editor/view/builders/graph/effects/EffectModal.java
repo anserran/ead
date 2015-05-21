@@ -47,14 +47,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
 import es.eucm.commander.Commander;
 import es.eucm.ead.editor.control.MokapController.BackListener;
 import es.eucm.ead.editor.view.SkinConstants;
 import es.eucm.ead.editor.view.builders.graph.LogicView.ReadGraph;
 import es.eucm.ead.editor.view.widgets.WidgetBuilder;
 import es.eucm.ead.engine.I18N;
-import es.eucm.ead.schema.effects.Effect;
 import es.eucm.gdx.Modal;
 import es.eucm.gdx.WidgetUtils;
 import es.eucm.gdx.actions.ExtraActions;
@@ -62,7 +60,7 @@ import es.eucm.gdx.widgets.layouts.LinearLayout;
 import es.eucm.graph.core.NodeBuilder;
 import es.eucm.graph.core.NodeBuilder.EditionResult;
 
-public abstract class EffectModal<T extends Effect> extends Table implements
+public abstract class EffectModal<T> extends Table implements
 		Modal, BackListener {
 
 	private EditionResult editionResult;

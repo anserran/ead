@@ -36,7 +36,7 @@
  */
 package es.eucm.ead.editor.view.builders.graph;
 
-import es.eucm.ead.schema.components.behaviors.events.Init;
+import es.eucm.ead.schema.components.behaviors.events.Timer;
 import es.eucm.graph.core.GraphBuilder;
 import es.eucm.graph.model.Graph;
 
@@ -44,7 +44,10 @@ public class LogicGraphBuilder implements GraphBuilder {
 	@Override
 	public Graph newGraph() {
 		Graph graph = new Graph(true);
-		graph.getRoot().setContent(new Init());
+		Timer timer = new Timer();
+		timer.setRepeat(0);
+		timer.setTime(1.0f);
+		graph.getRoot().setContent(timer);
 		return graph;
 	}
 }

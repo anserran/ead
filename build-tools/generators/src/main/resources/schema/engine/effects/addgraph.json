@@ -1,0 +1,18 @@
+{
+  "description": "Adds a graph component starting from a point",
+  "additionalProperties": false,
+  "extends": {
+    "$ref": "effect.json"
+  },
+  "javaType": "es.eucm.ead.schema.effects.AddGraph",
+  "properties": {
+    "graph": {
+      "javaType": "es.eucm.graph.model.Graph",
+      "type": "object"
+    },
+    "start": {
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

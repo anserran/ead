@@ -38,11 +38,16 @@ package es.eucm.ead.engine.processors;
 
 import com.badlogic.ashley.core.Component;
 
+import com.badlogic.gdx.utils.Array;
 import es.eucm.ead.engine.GameLoop;
 import es.eucm.ead.engine.components.GraphComponent;
 import es.eucm.ead.engine.components.MultiComponent;
+import es.eucm.ead.engine.components.behaviors.TimersComponent;
 import es.eucm.ead.schema.components.Logic;
 import es.eucm.ead.schema.components.behaviors.events.Init;
+import es.eucm.ead.schema.components.behaviors.events.Timer;
+import es.eucm.ead.schema.effects.AddGraph;
+import es.eucm.ead.schema.effects.Effect;
 import es.eucm.graph.model.Graph;
 import es.eucm.graph.model.Node;
 
@@ -56,12 +61,20 @@ public class LogicProcessor extends ComponentProcessor<Logic> {
 	public Component getComponent(Logic logic) {
 		MultiComponent component = new MultiComponent();
 		GraphComponent graphComponent = new GraphComponent();
+		TimersComponent timersComponent = new TimersComponent();
 		component.add(graphComponent);
+		component.add(timersComponent);
 		for (Graph graph : logic.getSequences()) {
-			if (graph.getRoot().getContent() instanceof Init) {
-				Node nextNode = graph.getNode(graph.getRoot().getForks().get(0)
-						.getNext());
+			Node root = graph.getRoot();
+			Node nextNode = graph.getNode(root.getForks().get(0).getNext());
+			if (root.getContent() instanceof Init) {
 				graphComponent.add(graph, nextNode);
+			} else if (root.getContent() instanceof Timer) {
+				AddGraph addGraph = new AddGraph();
+				addGraph.setGraph(graph);
+				addGraph.setStart(nextNode.getId());
+				timersComponent.addBehavior((Timer) root.getContent(),
+						new Array<Effect>(new Effect[] { addGraph }));
 			}
 		}
 		return component;

@@ -39,17 +39,15 @@ package es.eucm.ead.editor.view.builders.graph.effects;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import es.eucm.commander.Commander;
 import es.eucm.ead.editor.view.SkinConstants;
 import es.eucm.ead.engine.I18N;
-import es.eucm.ead.schema.effects.Effect;
 import es.eucm.gdx.WidgetUtils;
 import es.eucm.graph.core.NodeBuilder;
 import es.eucm.graph.model.Node;
 import es.eucm.graph.model.Node.Fork;
 
-public abstract class EffectNodeBuilder<T extends Effect> implements
+public abstract class EffectNodeBuilder<T> implements
 		NodeBuilder<T> {
 
 	protected Commander commander;

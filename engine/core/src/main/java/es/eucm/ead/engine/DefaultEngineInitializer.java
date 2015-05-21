@@ -180,6 +180,8 @@ public class DefaultEngineInitializer implements EngineInitializer {
 				new SetCameraExecutor(gameView, variablesManager));
 		effectsSystem.registerEffectExecutor(PlaySound.class,
 				new PlaySoundExecutor(effectsSystem));
+		effectsSystem.registerEffectExecutor(AddGraph.class,
+				new AddGraphExecutor());
 
 		TrackEffectExecutor timelineExecutor = new TrackEffectExecutor(
 				effectsSystem);
